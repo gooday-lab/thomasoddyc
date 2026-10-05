@@ -23,7 +23,8 @@ The public portfolio is available at `/` and the admin workspace at `/admin`.
 ## Connect Supabase
 
 1. Create a Supabase project.
-2. In Supabase SQL Editor, run [`supabase/schema.sql`](./supabase/schema.sql).
+2. In Supabase SQL Editor, run [`supabase/schema.sql`](./supabase/schema.sql). It is idempotent — safe to re-run at any time to repair or add missing columns.
+   - To start from scratch instead, run [`supabase/reset.sql`](./supabase/reset.sql) first to drop the portfolio tables, then run `schema.sql`.
 3. Create the single admin user under **Authentication → Users**.
 4. Copy `.env.example` to `.env.local` and add the project URL and anon key:
 
