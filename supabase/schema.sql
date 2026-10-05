@@ -71,6 +71,15 @@ alter table public.testimonials
   add column if not exists sort_order integer default 0,
   add column if not exists published boolean default true;
 
+create table if not exists public.site_copy (
+  copy_key text primary key
+);
+
+alter table public.site_copy
+  add column if not exists value_en text,
+  add column if not exists value_id text,
+  add column if not exists updated_at timestamptz default now();
+
 -- ---------------------------------------------------------------------------
 -- Row Level Security
 -- ---------------------------------------------------------------------------
@@ -79,6 +88,7 @@ alter table public.profile enable row level security;
 alter table public.projects enable row level security;
 alter table public.certifications enable row level security;
 alter table public.testimonials enable row level security;
+alter table public.site_copy enable row level security;
 
 drop policy if exists "Public can read profile" on public.profile;
 create policy "Public can read profile" on public.profile for select using (true);
@@ -92,6 +102,9 @@ create policy "Public can read published certifications" on public.certification
 drop policy if exists "Public can read published testimonials" on public.testimonials;
 create policy "Public can read published testimonials" on public.testimonials for select using (published = true or auth.role() = 'authenticated');
 
+drop policy if exists "Public can read site copy" on public.site_copy;
+create policy "Public can read site copy" on public.site_copy for select using (true);
+
 drop policy if exists "Authenticated users manage profile" on public.profile;
 create policy "Authenticated users manage profile" on public.profile for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
 
@@ -103,6 +116,9 @@ create policy "Authenticated users manage certifications" on public.certificatio
 
 drop policy if exists "Authenticated users manage testimonials" on public.testimonials;
 create policy "Authenticated users manage testimonials" on public.testimonials for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
+
+drop policy if exists "Authenticated users manage site copy" on public.site_copy;
+create policy "Authenticated users manage site copy" on public.site_copy for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
 
 -- ---------------------------------------------------------------------------
 -- Storage

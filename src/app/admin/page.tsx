@@ -15,6 +15,7 @@ import {
   Quote,
   Settings2,
   ShieldCheck,
+  Sparkles,
   Trash2,
   UploadCloud,
   UserRound,
@@ -26,6 +27,7 @@ import {
   defaultTestimonials,
   fetchCertifications,
   fetchProjects,
+  fetchSiteCopy,
   fetchTestimonials,
   formatUpdated,
   slugify,
@@ -33,8 +35,9 @@ import {
   type ProjectRecord,
   type TestimonialRecord,
 } from "@/lib/content";
+import { copy, copyGroups, copyKeys, type CopyKey } from "@/lib/copy";
 
-type TabName = "Overview" | "Projects" | "Certifications" | "Testimonials" | "Files" | "Profile";
+type TabName = "Overview" | "Projects" | "Certifications" | "Testimonials" | "Site copy" | "Files" | "Profile";
 
 const isLocalId = (id: string) => id.startsWith("default-");
 
@@ -49,6 +52,11 @@ const emptyProjectForm = {
   impactLabelId: "",
   tags: "",
 };
+
+const initialCopyEdits = () =>
+  Object.fromEntries(
+    copyKeys.map((key) => [key, { en: copy.en[key], id: copy.id[key] }]),
+  ) as Record<CopyKey, { en: string; id: string }>;
 
 export default function AdminPage() {
   const [email, setEmail] = useState("");
@@ -68,6 +76,7 @@ export default function AdminPage() {
   const [projectForm, setProjectForm] = useState(emptyProjectForm);
   const [certForm, setCertForm] = useState({ nameEn: "", nameId: "", issuer: "", year: "" });
   const [testimonialForm, setTestimonialForm] = useState({ quoteEn: "", quoteId: "", authorName: "", authorRole: "" });
+  const [copyEdits, setCopyEdits] = useState(initialCopyEdits);
 
   const [profileId, setProfileId] = useState<string | null>(null);
   const [profileName, setProfileName] = useState("Thomas Oddy Chrisdwianto");
@@ -83,16 +92,28 @@ export default function AdminPage() {
     const client = supabase;
     if (!loggedIn || !client) return;
     const loadAll = async () => {
-      const [profile, projectRows, certRows, testimonialRows] = await Promise.all([
+      const [profile, projectRows, certRows, testimonialRows, copyRows] = await Promise.all([
         client.from("profile").select("*").limit(1).maybeSingle(),
         fetchProjects({ publishedOnly: false }),
         fetchCertifications({ publishedOnly: false }),
         fetchTestimonials({ publishedOnly: false }),
+        fetchSiteCopy(),
       ]);
       if (profile.error) setMessage(profile.error.message);
       if (projectRows.length) setProjects(projectRows);
       if (certRows.length) setCertifications(certRows);
       if (testimonialRows.length) setTestimonials(testimonialRows);
+      if (copyRows.length) {
+        setCopyEdits((current) => {
+          const next = { ...current };
+          for (const row of copyRows) {
+            if (row.copy_key in next) {
+              next[row.copy_key as CopyKey] = { en: row.value_en ?? "", id: row.value_id ?? "" };
+            }
+          }
+          return next;
+        });
+      }
       const data = profile.data;
       if (data) {
         setProfileId(data.id);
@@ -134,6 +155,26 @@ export default function AdminPage() {
     }
     setProfileId(data.id);
     setMessage("Profile changes saved.");
+  };
+
+  const saveSiteCopy = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!supabase) {
+      setMessage("Site copy changes are shown in preview mode. Connect Supabase to save them.");
+      return;
+    }
+    const rows = copyKeys.map((key) => ({
+      copy_key: key,
+      value_en: copyEdits[key].en.trim(),
+      value_id: copyEdits[key].id.trim() || null,
+      updated_at: new Date().toISOString(),
+    }));
+    const { error } = await supabase.from("site_copy").upsert(rows, { onConflict: "copy_key" });
+    if (error) {
+      setMessage(error.message);
+      return;
+    }
+    setMessage("Site copy saved — the public site now uses these greetings.");
   };
 
   const uploadProfileAsset = async (event: ChangeEvent<HTMLInputElement>, kind: "photo" | "cv") => {
@@ -397,6 +438,7 @@ export default function AdminPage() {
     { name: "Projects", icon: FolderKanban },
     { name: "Certifications", icon: Award },
     { name: "Testimonials", icon: Quote },
+    { name: "Site copy", icon: Sparkles },
     { name: "Files", icon: FileText },
     { name: "Profile", icon: UserRound },
   ];
@@ -427,7 +469,7 @@ export default function AdminPage() {
           {showProjectForm ? <form className="project-form" onSubmit={saveProject}>
             <label>Project title (EN)<input value={projectForm.titleEn} onChange={(event) => setProjectForm({ ...projectForm, titleEn: event.target.value })} placeholder="e.g. Regulatory reporting automation" required /></label>
             <label>Project title (ID)<input value={projectForm.titleId} onChange={(event) => setProjectForm({ ...projectForm, titleId: event.target.value })} placeholder="e.g. Otomasi regulatory reporting" /></label>
-            <label>Content type<input value={projectForm.projectType} onChange={(event) => setProjectForm({ ...projectForm, projectType: event.target.value })} placeholder="e.g. Case study" /></label>
+            <label>Content type<input value={projectForm.projectType} onChange={(event) => setProjectForm({ ...projectForm, projectType: event.target.value })} placeholder="e.g. Case study" /><small className="field-hint">Use “Case study” to list it on the Case studies page; any other type appears on the Projects page.</small></label>
             <label>Impact metric<input value={projectForm.impactValue} onChange={(event) => setProjectForm({ ...projectForm, impactValue: event.target.value })} placeholder="e.g. 75%" /></label>
             <label>Impact label (EN)<input value={projectForm.impactLabelEn} onChange={(event) => setProjectForm({ ...projectForm, impactLabelEn: event.target.value })} placeholder="e.g. less processing time" /></label>
             <label>Impact label (ID)<input value={projectForm.impactLabelId} onChange={(event) => setProjectForm({ ...projectForm, impactLabelId: event.target.value })} placeholder="e.g. waktu proses lebih singkat" /></label>
@@ -459,6 +501,11 @@ export default function AdminPage() {
             <div className="form-actions full-field"><button type="submit" className="admin-primary small">Add testimonial <span>→</span></button></div>
           </form>
         </div>}
+
+        {active === "Site copy" && <form className="admin-panel" onSubmit={saveSiteCopy}><div className="panel-heading"><div><span className="admin-kicker">Greetings & labels</span><h3>Site copy</h3></div><button className="admin-primary small" type="submit">Save all changes</button></div>
+          <p className="field-hint">Every greeting, heading, and label on the public pages. English (EN) and Indonesian (ID) are stored separately — the site shows the one matching the visitor&apos;s language toggle. Use \n for a line break in titles.</p>
+          {copyGroups.map((group) => <div className="copy-group" key={group.group}><h3>{group.group}</h3>{group.items.map((item) => <label className="copy-field" key={item.key}>{item.label}<div className="copy-pair"><input value={copyEdits[item.key].en} onChange={(event) => setCopyEdits({ ...copyEdits, [item.key]: { ...copyEdits[item.key], en: event.target.value } })} placeholder="English" /><input value={copyEdits[item.key].id} onChange={(event) => setCopyEdits({ ...copyEdits, [item.key]: { ...copyEdits[item.key], id: event.target.value } })} placeholder="Indonesia" /></div></label>)}</div>)}
+        </form>}
 
         {active === "Files" && <div className="admin-panel"><div className="panel-heading"><div><span className="admin-kicker">Media library</span><h3>Upload files</h3></div></div><label className="upload-zone"><input type="file" onChange={handleUpload} accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.webp" /><UploadCloud size={27} /><strong>Drop a file here, or browse</strong><span>PDF, DOCX, JPG, PNG or WEBP · Max 10MB</span></label>{files.map((file) => <div className="file-preview" key={file.name}><FileText size={18} /><span>{file.name}</span><span className="published-pill">Ready</span></div>)}</div>}
 

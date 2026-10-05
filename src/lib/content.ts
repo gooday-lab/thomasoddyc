@@ -152,6 +152,20 @@ export const defaultTestimonials: TestimonialRecord[] = [
   },
 ];
 
+/** A UI copy override stored in the `site_copy` table (admin → Site copy). */
+export type SiteCopyRecord = {
+  copy_key: string;
+  value_en: string | null;
+  value_id: string | null;
+};
+
+export async function fetchSiteCopy(): Promise<SiteCopyRecord[]> {
+  if (!supabase) return [];
+  const { data, error } = await supabase.from("site_copy").select("*");
+  if (error || !data) return [];
+  return data as SiteCopyRecord[];
+}
+
 export async function fetchProfile(): Promise<ProfileRecord | null> {
   if (!supabase) return null;
   const { data, error } = await supabase.from("profile").select("*").limit(1).maybeSingle();

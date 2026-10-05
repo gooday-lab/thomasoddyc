@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { SiteProvider } from "@/components/site-context";
 
 export const metadata: Metadata = {
   title: "Thomas Oddy Chrisdwianto — MIS Analyst",
@@ -16,7 +17,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <SiteProvider>{children}</SiteProvider>
+      </body>
     </html>
   );
 }

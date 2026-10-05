@@ -35,6 +35,7 @@ button { font: inherit; }
 .nav-links { display: flex; gap: clamp(18px, 2.5vw, 38px); margin-left: auto; margin-right: 40px; }
 .nav-links a, .nav-admin, .nav-language { font-family: "DM Mono", monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); transition: color .2s ease; }
 .nav-links a:hover, .nav-admin:hover { color: var(--ink); }
+.nav-links a.active { color: var(--ink); font-weight: 700; }
 .nav-actions { display: flex; align-items: center; gap: 24px; }
 .nav-language { display: flex; gap: 7px; align-items: center; }
 .nav-language button { border: 0; background: none; padding: 0; cursor: pointer; color: var(--muted); font: inherit; font-size: inherit; }
@@ -306,6 +307,15 @@ blockquote { font-family: "Manrope", sans-serif; font-size: clamp(28px, 4vw, 52p
 .project-form input:focus, .project-form textarea:focus { border-color: var(--sage-deep); }
 .form-actions { grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 10px; padding-top: 7px; }
 .draft-pill { padding: 5px 8px; background: #efe9dd; color: #8a7647; font: 9px "DM Mono", monospace; text-transform: uppercase; white-space: nowrap; }
+.work-empty { color: var(--muted); font-size: 14px; line-height: 1.6; padding: 32px 0; max-width: 520px; }
+.copy-group { padding-top: 26px; margin-top: 26px; border-top: 1px solid var(--line); }
+.copy-group:first-of-type { border-top: 0; margin-top: 0; }
+.copy-group h3 { margin: 0 0 17px; font-family: "Manrope", sans-serif; font-size: 16px; letter-spacing: -.05em; }
+.copy-field { display: grid; gap: 8px; color: var(--muted); font-family: "DM Mono", monospace; font-size: 9px; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 15px; }
+.copy-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.copy-pair input, .copy-pair textarea { width: 100%; border: 1px solid var(--line); background: var(--white); color: var(--ink); padding: 12px; font: 13px "DM Sans", sans-serif; outline: none; text-transform: none; letter-spacing: normal; }
+.copy-pair input:focus, .copy-pair textarea:focus { border-color: var(--sage-deep); }
+.field-hint { color: var(--muted); font: 11px "DM Sans", sans-serif; text-transform: none; letter-spacing: normal; line-height: 1.5; }
 .admin-project-row .row-actions { flex: 0 0 auto; flex-direction: row; align-items: center; gap: 7px; }
 .row-actions { display: flex; gap: 7px; }
 .row-action { border: 1px solid var(--line); background: transparent; color: var(--muted); cursor: pointer; padding: 6px 9px; display: inline-flex; align-items: center; gap: 6px; font: 9px "DM Mono", monospace; text-transform: uppercase; letter-spacing: .04em; transition: color .2s, border-color .2s; }
