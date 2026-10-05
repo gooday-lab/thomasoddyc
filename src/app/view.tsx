@@ -40,7 +40,7 @@ export default function HomeView() {
             <h1><MultiLine text={t.heroTitle} /></h1>
             <p className="hero-body">{pick(profile.bio_en, profile.bio_id) || t.heroBody}</p>
             <div className="hero-actions">
-              <Link href="/about" className="button button-dark">{t.explore} <ArrowUpRight size={16} /></Link>
+              <Link href="/case-studies" className="button button-dark">{t.explore} <ArrowUpRight size={16} /></Link>
               <a href={profile.cv_url || "/Thomas_Oddy_ATS_CV.docx"} className="text-link"><Download size={15} /> {t.cv}</a>
             </div>
             <div className="availability"><span className="status-dot" /> {t.available}</div>

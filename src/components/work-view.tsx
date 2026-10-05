@@ -49,7 +49,7 @@ export default function WorkView({ variant }: { variant: "case-studies" | "proje
                   </div>
                   <div className="project-stat"><strong>{project.impact_value ?? ""}</strong><span>{pick(project.impact_label_en, project.impact_label_id)}</span></div>
                 </div>
-                <Link className="project-link" href="/contact">{t.aboutProject} <MoveUpRight size={16} /></Link>
+                <Link className="project-link" href={`/${variant}/${project.slug}`}>{t.aboutProject} <MoveUpRight size={16} /></Link>
               </article>
             ))}
           </div>

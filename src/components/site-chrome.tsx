@@ -79,9 +79,9 @@ export function SectionLabel({ children }: { children: React.ReactNode }) {
   return <p className="section-label">{children}</p>;
 }
 
-/** Renders text containing "\n" as stacked lines (used by hero and section titles). */
+/** Renders text containing line breaks (real newlines or typed \\n) as stacked lines. */
 export function MultiLine({ text }: { text: string }) {
-  return <>{text.split("\n").map((line) => <span key={line}>{line}</span>)}</>;
+  return <>{text.split(/\n|\\n/).map((line) => <span key={line}>{line}</span>)}</>;
 }
 
 export function SiteShell({ children }: { children: React.ReactNode }) {

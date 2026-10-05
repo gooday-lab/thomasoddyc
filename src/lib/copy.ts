@@ -54,7 +54,8 @@ export const copy = {
     linkedin: "LinkedIn profile",
     admin: "Admin",
     viewAll: "View all projects",
-    present: "Present",
+    projectCta: "Let’s discuss this work",
+    backToList: "Back to all work",
   },
   id: {
     navAbout: "Tentang",
@@ -102,7 +103,8 @@ export const copy = {
     linkedin: "Profil LinkedIn",
     admin: "Admin",
     viewAll: "Lihat semua proyek",
-    present: "Sekarang",
+    projectCta: "Mari diskusikan",
+    backToList: "Kembali ke daftar",
   },
 };
 
@@ -187,6 +189,8 @@ export const copyGroups: { group: string; items: { key: CopyKey; label: string }
       { key: "workBody", label: "Section body" },
       { key: "aboutProject", label: "Project link" },
       { key: "viewAll", label: "View all link" },
+      { key: "projectCta", label: "Detail page button" },
+      { key: "backToList", label: "Detail page back link" },
     ],
   },
   {

@@ -17,7 +17,7 @@ export default function ContactView() {
           <div className="contact-actions">
             <a href={`mailto:${profile.email}`} className="button button-light"><Mail size={17} /> {t.email}</a>
             <a href={profile.linkedin_url ?? "#"} target="_blank" rel="noreferrer" className="contact-social">in&nbsp; {t.linkedin} <ExternalLink size={14} /></a>
-            <a href="https://goodays.page.dev" target="_blank" rel="noreferrer" className="contact-social">goodays.page.dev <ExternalLink size={14} /></a>
+            <a href="https://goodays.pages.dev" target="_blank" rel="noreferrer" className="contact-social">goodays.pages.dev <ExternalLink size={14} /></a>
           </div>
         </div>
       </section>
