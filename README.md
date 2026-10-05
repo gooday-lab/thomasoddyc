@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Thomas Oddy Portfolio
 
-## Getting Started
+A bilingual personal portfolio and CV website for Thomas Oddy Chrisdwianto — MIS Analyst, Data & Reporting Automation.
 
-First, run the development server:
+## Stack
+
+- Next.js 16 + TypeScript
+- Tailwind CSS 4
+- Supabase Auth, Postgres, and Storage
+- Vercel-ready deployment
+
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The public portfolio is available at `/` and the admin workspace at `/admin`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Connect Supabase
 
-## Learn More
+1. Create a Supabase project.
+2. In Supabase SQL Editor, run [`supabase/schema.sql`](./supabase/schema.sql).
+3. Create the single admin user under **Authentication → Users**.
+4. Copy `.env.example` to `.env.local` and add the project URL and anon key:
 
-To learn more about Next.js, take a look at the following resources:
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+5. Restart the dev server.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Without Supabase environment variables, `/admin` runs in a safe preview mode so the interface can be reviewed before credentials are connected. Once configured, sign-in and Storage uploads use Supabase.
 
-## Deploy on Vercel
+## Content notes
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- English is the default public language; use the `EN / ID` control to switch to Indonesian.
+- The public site reads profile, projects, certifications, and testimonials from Supabase. Anything edited in `/admin` appears on the live site; until Supabase has content, the built-in defaults are shown.
+- Every content type supports both English and Indonesian fields (`*_en` / `*_id`), so the `EN / ID` toggle switches real translations, not just UI labels.
+- The starter CV is copied to `public/Thomas_Oddy_ATS_CV.docx` for the Download CV action (replaced by the CV uploaded from `/admin` → Profile once Supabase Storage is connected).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Checks
+
+```bash
+npm run lint
+npm run build
+```
