@@ -56,6 +56,7 @@ export const copy = {
     viewAll: "View all projects",
     projectCta: "Let’s discuss this work",
     backToList: "Back to all work",
+    copyright: "© 2026 Thomas Oddy Chrisdwianto",
   },
   id: {
     navAbout: "Tentang",
@@ -105,6 +106,7 @@ export const copy = {
     viewAll: "Lihat semua proyek",
     projectCta: "Mari diskusikan",
     backToList: "Kembali ke daftar",
+    copyright: "© 2026 Thomas Oddy Chrisdwianto",
   },
 };
 
@@ -192,6 +194,10 @@ export const copyGroups: { group: string; items: { key: CopyKey; label: string }
       { key: "projectCta", label: "Detail page button" },
       { key: "backToList", label: "Detail page back link" },
     ],
+  },
+  {
+    group: "Footer",
+    items: [{ key: "copyright", label: "Copyright notice" }],
   },
   {
     group: "Contact",

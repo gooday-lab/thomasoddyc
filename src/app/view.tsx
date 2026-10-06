@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { ArrowUpRight, BarChart3, Download, Quote } from "lucide-react";
 import { useSite } from "@/components/site-context";
 import { MultiLine, SectionLabel, SiteShell } from "@/components/site-chrome";
@@ -18,7 +18,7 @@ function initials(name: string | null | undefined) {
 }
 
 export default function HomeView() {
-  const { t, isId, pick, profile } = useSite();
+  const { t, isId, pick, profile, heroDesign } = useSite();
   const [testimonials, setTestimonials] = useState<TestimonialRecord[]>(defaultTestimonials);
 
   useEffect(() => {
@@ -33,7 +33,14 @@ export default function HomeView() {
 
   return (
     <SiteShell>
-      <section className="hero section-pad">
+      <section
+        className={`hero section-pad hero-${heroDesign.orientation}`}
+        style={{
+          "--hero-font": heroDesign.font,
+          "--hero-size": heroDesign.size,
+          "--hero-align": heroDesign.align,
+        } as CSSProperties}
+      >
         <div className="hero-grid">
           <div className="hero-content">
             <div className="eyebrow"><span className="eyebrow-dot" /> {t.eyebrow}</div>
@@ -45,7 +52,8 @@ export default function HomeView() {
             </div>
             <div className="availability"><span className="status-dot" /> {t.available}</div>
           </div>
-          <div className="hero-visual" aria-label="Data visualization illustration">
+          <div className="hero-visual" aria-label={profile.profile_photo_url ? "Profile photo" : "Data visualization illustration"}>
+            {profile.profile_photo_url && <img className="hero-photo" src={profile.profile_photo_url} alt={profile.full_name} />}
             <div className="visual-orbit orbit-one" />
             <div className="visual-orbit orbit-two" />
             <div className="visual-core">

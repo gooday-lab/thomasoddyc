@@ -49,7 +49,10 @@ button { font: inherit; }
 .eyebrow, .section-label { color: var(--sage-deep); font-family: "DM Mono", monospace; font-size: 10px; line-height: 1.5; letter-spacing: .08em; text-transform: uppercase; }
 .eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 29px; }
 .eyebrow-dot, .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--sage-deep); display: inline-block; box-shadow: 0 0 0 4px rgba(88,114,93,.1); }
-.hero h1 { font-family: "Manrope", sans-serif; font-size: clamp(54px, 7.6vw, 112px); line-height: .97; letter-spacing: -.085em; margin: 0 0 31px; font-weight: 700; max-width: 800px; }
+.hero h1 { font-family: var(--hero-font, "Manrope"), sans-serif; font-size: var(--hero-size, clamp(54px, 7.6vw, 112px)); line-height: .97; letter-spacing: -.085em; margin: 0 0 31px; font-weight: 700; max-width: 800px; text-align: var(--hero-align, left); }
+.hero-vertical h1 { writing-mode: vertical-rl; text-orientation: mixed; margin-left: auto; margin-right: auto; }
+.hero-photo { position: absolute; inset: 0; z-index: 5; width: 100%; height: 100%; object-fit: cover; filter: saturate(.85); }
+.hero-visual:has(.hero-photo) > :not(.hero-photo) { opacity: .12; }
 .hero h1 span, h2 span { display: block; }
 .hero-body { max-width: 440px; color: var(--muted); font-size: 17px; line-height: 1.7; margin: 0 0 35px; }
 .hero-actions { display: flex; align-items: center; gap: 27px; margin-bottom: 57px; }
@@ -317,6 +320,8 @@ blockquote { font-family: "Manrope", sans-serif; font-size: clamp(28px, 4vw, 52p
 .copy-group h3 { margin: 0 0 17px; font-family: "Manrope", sans-serif; font-size: 16px; letter-spacing: -.05em; }
 .copy-field { display: grid; gap: 8px; color: var(--muted); font-family: "DM Mono", monospace; font-size: 9px; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 15px; }
 .copy-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.copy-pair-body { grid-template-columns: 1fr; gap: 8px; }
+.copy-pair-body textarea { min-height: 130px; resize: vertical; line-height: 1.6; }
 .copy-pair input, .copy-pair textarea { width: 100%; border: 1px solid var(--line); background: var(--white); color: var(--ink); padding: 12px; font: 13px "DM Sans", sans-serif; outline: none; text-transform: none; letter-spacing: normal; }
 .copy-pair input:focus, .copy-pair textarea:focus { border-color: var(--sage-deep); }
 .field-hint { color: var(--muted); font: 11px "DM Sans", sans-serif; text-transform: none; letter-spacing: normal; line-height: 1.5; }

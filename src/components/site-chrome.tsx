@@ -62,14 +62,14 @@ export function SiteNav() {
 }
 
 export function SiteFooter() {
-  const { profile } = useSite();
+  const { profile, t } = useSite();
   return (
     <footer className="site-footer">
       <Link className="brand" href="/">
         <span className="brand-mark">TO</span>
         <span className="brand-name">Thomas Oddy<span>.</span></span>
       </Link>
-      <span>© 2026 {profile.full_name}</span>
+      <span>{t.copyright || `© 2026 ${profile.full_name}`}</span>
       <Link href="/">Back to home ↑</Link>
     </footer>
   );

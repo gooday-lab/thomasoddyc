@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import {
   Award,
+  ArrowDown,
+  ArrowUp,
   BarChart3,
   CheckCircle2,
   FileText,
@@ -35,10 +37,13 @@ import {
   type TestimonialRecord,
 } from "@/lib/content";
 import { copy, copyGroups, copyKeys, type CopyKey } from "@/lib/copy";
+import { defaultHeroDesign, type HeroDesign } from "@/components/site-context";
 
-type TabName = "Overview" | "Projects" | "Certifications" | "Testimonials" | "Site copy" | "Files" | "Profile";
+type TabName = "Overview" | "Projects" | "Certifications" | "Testimonials" | "Site copy" | "Hero design" | "Files" | "Profile";
 
 const isLocalId = (id: string) => id.startsWith("default-");
+
+type OrderedItem = { id: string; sort_order: number };
 
 const emptyProjectForm = {
   titleEn: "",
@@ -64,6 +69,38 @@ export default function AdminPage() {
   const [active, setActive] = useState<TabName>("Overview");
   const [message, setMessage] = useState("");
   const [loginError, setLoginError] = useState("");
+  const allowLeaveRef = useRef(false);
+
+  useEffect(() => {
+    if (!supabase) return;
+
+    let mounted = true;
+    void supabase.auth.getSession().then(({ data }) => {
+      if (mounted) setLoggedIn(Boolean(data.session));
+    });
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setLoggedIn(Boolean(session));
+    });
+
+    return () => {
+      mounted = false;
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!loggedIn) return;
+
+    const warnBeforeLeaving = (event: BeforeUnloadEvent) => {
+      if (allowLeaveRef.current) return;
+      event.preventDefault();
+      event.returnValue = "You are leaving the admin workspace. Are you sure?";
+    };
+
+    window.addEventListener("beforeunload", warnBeforeLeaving);
+    return () => window.removeEventListener("beforeunload", warnBeforeLeaving);
+  }, [loggedIn]);
 
   const [projects, setProjects] = useState<ProjectRecord[]>(defaultProjects);
   const [certifications, setCertifications] = useState<CertificationRecord[]>(defaultCertifications);
@@ -76,6 +113,7 @@ export default function AdminPage() {
   const [certForm, setCertForm] = useState({ nameEn: "", nameId: "", issuer: "", year: "" });
   const [testimonialForm, setTestimonialForm] = useState({ quoteEn: "", quoteId: "", authorName: "", authorRole: "" });
   const [copyEdits, setCopyEdits] = useState(initialCopyEdits);
+  const [heroDesign, setHeroDesign] = useState<HeroDesign>(defaultHeroDesign);
 
   const [profileId, setProfileId] = useState<string | null>(null);
   const [profileName, setProfileName] = useState("Thomas Oddy Chrisdwianto");
@@ -103,6 +141,15 @@ export default function AdminPage() {
       if (certRows.length) setCertifications(certRows);
       if (testimonialRows.length) setTestimonials(testimonialRows);
       if (copyRows.length) {
+        const setting = (key: string) => copyRows.find((row) => row.copy_key === key)?.value_en;
+        setHeroDesign({
+          font: setting("heroFont") || defaultHeroDesign.font,
+          size: setting("heroSize") || defaultHeroDesign.size,
+          align: (["left", "center", "right"] as const).includes(setting("heroAlign") as HeroDesign["align"])
+            ? setting("heroAlign") as HeroDesign["align"]
+            : defaultHeroDesign.align,
+          orientation: setting("heroOrientation") === "vertical" ? "vertical" : "horizontal",
+        });
         setCopyEdits((current) => {
           const next = { ...current };
           for (const row of copyRows) {
@@ -176,6 +223,22 @@ export default function AdminPage() {
     setMessage("Site copy saved — the public site now uses these greetings.");
   };
 
+  const saveHeroDesign = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!supabase) {
+      setMessage("Hero design changes are shown in preview mode. Connect Supabase to save them.");
+      return;
+    }
+    const rows = [
+      ["heroFont", heroDesign.font],
+      ["heroSize", heroDesign.size],
+      ["heroAlign", heroDesign.align],
+      ["heroOrientation", heroDesign.orientation],
+    ].map(([copy_key, value_en]) => ({ copy_key, value_en, value_id: value_en, updated_at: new Date().toISOString() }));
+    const { error } = await supabase.from("site_copy").upsert(rows, { onConflict: "copy_key" });
+    setMessage(error ? error.message : "Hero design saved.");
+  };
+
   const uploadProfileAsset = async (event: ChangeEvent<HTMLInputElement>, kind: "photo" | "cv") => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -217,6 +280,7 @@ export default function AdminPage() {
   const signIn = async (event: React.FormEvent) => {
     event.preventDefault();
     setLoginError("");
+    allowLeaveRef.current = false;
     if (!supabase) {
       setLoggedIn(true);
       setMessage("Demo mode active — connect Supabase to enable secure authentication.");
@@ -225,6 +289,12 @@ export default function AdminPage() {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) setLoginError(error.message);
     else setLoggedIn(true);
+  };
+
+  const signOut = async () => {
+    allowLeaveRef.current = true;
+    if (supabase) await supabase.auth.signOut();
+    setLoggedIn(false);
   };
 
   const openProjectForm = (project?: ProjectRecord) => {
@@ -263,6 +333,7 @@ export default function AdminPage() {
       impact_label_en: projectForm.impactLabelEn.trim() || null,
       impact_label_id: projectForm.impactLabelId.trim() || null,
       tags: projectForm.tags.split(",").map((tag) => tag.trim()).filter(Boolean),
+      sort_order: editingProjectId ? (projects.find((item) => item.id === editingProjectId)?.sort_order ?? projects.length + 1) : (projects.length ? Math.max(...projects.map((item) => item.sort_order)) + 1 : 1),
       updated_at: new Date().toISOString(),
     };
 
@@ -338,6 +409,29 @@ export default function AdminPage() {
     setMessage(`"${project.title_en}" deleted.`);
   };
 
+  const reorderItems = async <T extends OrderedItem>(items: T[], setItems: React.Dispatch<React.SetStateAction<T[]>>, table: string, index: number, direction: -1 | 1) => {
+    const targetIndex = index + direction;
+    if (targetIndex < 0 || targetIndex >= items.length) return;
+    const current = items[index];
+    const target = items[targetIndex];
+    const next = [...items];
+    next[index] = { ...target, sort_order: current.sort_order };
+    next[targetIndex] = { ...current, sort_order: target.sort_order };
+
+    if (supabase && !isLocalId(current.id) && !isLocalId(target.id)) {
+      const { error } = await Promise.all([
+        supabase.from(table).update({ sort_order: current.sort_order }).eq("id", target.id),
+        supabase.from(table).update({ sort_order: target.sort_order }).eq("id", current.id),
+      ]).then(([first, second]) => ({ error: first.error ?? second.error }));
+      if (error) {
+        setMessage(error.message);
+        return;
+      }
+    }
+    setItems(next);
+    setMessage("Display order updated.");
+  };
+
   const createCertification = async (event: React.FormEvent) => {
     event.preventDefault();
     const nameEn = certForm.nameEn.trim();
@@ -348,6 +442,7 @@ export default function AdminPage() {
       issuer: certForm.issuer.trim() || null,
       year: certForm.year.trim() || null,
       published: true,
+      sort_order: certifications.length ? Math.max(...certifications.map((item) => item.sort_order)) + 1 : 1,
     };
     if (supabase) {
       const { data, error } = await supabase.from("certifications").insert(row).select("*").single();
@@ -357,7 +452,7 @@ export default function AdminPage() {
       }
       setCertifications((current) => [...current, data as CertificationRecord]);
     } else {
-      setCertifications((current) => [...current, { id: `default-cert-${Date.now()}`, file_url: null, sort_order: current.length + 1, ...row }]);
+      setCertifications((current) => [...current, { id: `default-cert-${Date.now()}`, file_url: null, ...row }]);
     }
     setCertForm({ nameEn: "", nameId: "", issuer: "", year: "" });
     setMessage("Certification added.");
@@ -398,6 +493,7 @@ export default function AdminPage() {
       author_name: testimonialForm.authorName.trim() || null,
       author_role: testimonialForm.authorRole.trim() || null,
       published: true,
+      sort_order: testimonials.length ? Math.max(...testimonials.map((item) => item.sort_order)) + 1 : 1,
     };
     if (supabase) {
       const { data, error } = await supabase.from("testimonials").insert(row).select("*").single();
@@ -407,7 +503,7 @@ export default function AdminPage() {
       }
       setTestimonials((current) => [...current, data as TestimonialRecord]);
     } else {
-      setTestimonials((current) => [...current, { id: `default-testimonial-${Date.now()}`, avatar_url: null, sort_order: current.length + 1, ...row }]);
+      setTestimonials((current) => [...current, { id: `default-testimonial-${Date.now()}`, avatar_url: null, ...row }]);
     }
     setTestimonialForm({ quoteEn: "", quoteId: "", authorName: "", authorRole: "" });
     setMessage("Testimonial added.");
@@ -464,6 +560,7 @@ export default function AdminPage() {
     { name: "Certifications", icon: Award },
     { name: "Testimonials", icon: Quote },
     { name: "Site copy", icon: Sparkles },
+    { name: "Hero design", icon: Sparkles },
     { name: "Files", icon: FileText },
     { name: "Profile", icon: UserRound },
   ];
@@ -474,10 +571,10 @@ export default function AdminPage() {
   return (
     <main className="admin-layout">
       <aside className="admin-sidebar">
-        <Link href="/" className="admin-brand"><span className="brand-mark">TO</span><span>Thomas Oddy<span>.</span></span></Link>
+        <Link href="/admin" className="admin-brand" aria-label="Admin dashboard"><span className="brand-mark">TO</span><span>Thomas Oddy<span>.</span></span></Link>
         <div className="admin-nav-label">Workspace</div>
         <nav>{menu.map((item) => { const Icon = item.icon; return <button className={active === item.name ? "active" : ""} key={item.name} onClick={() => setActive(item.name)}><Icon size={16} />{item.name}</button>; })}</nav>
-        <div className="admin-sidebar-bottom"><button onClick={() => setLoggedIn(false)}><LogOut size={16} /> Sign out</button></div>
+        <div className="admin-sidebar-bottom"><button onClick={() => void signOut()}><LogOut size={16} /> Sign out</button></div>
       </aside>
       <section className="admin-content">
         <header className="admin-header"><div><span className="admin-kicker">Admin workspace / {active}</span><h1>{active}</h1></div><Link className="view-site" href="/">View live site ↗</Link></header>
@@ -490,7 +587,7 @@ export default function AdminPage() {
         </>}
 
         {active === "Projects" && <div className="admin-panel"><div className="panel-heading"><div><span className="admin-kicker">Portfolio content</span><h3>Projects & case studies</h3></div><button className="admin-primary small" onClick={() => openProjectForm()}><Plus size={15} /> New project</button></div>
-          {projects.map((project) => <div className="admin-project-row" key={project.id}><span className="project-icon"><FolderKanban size={16} /></span><div><strong>{project.title_en}</strong><span>{project.type ?? "Case study"} · {project.tags.join(", ") || "no tags"}</span></div><span className={project.published ? "published-pill" : "draft-pill"}>{project.published ? "Published" : "Draft"}</span><div className="row-actions"><button className="row-action" onClick={() => openProjectForm(project)}><Pencil size={12} /> Edit</button><button className="row-action" onClick={() => void toggleProjectPublished(project)}>{project.published ? "Unpublish" : "Publish"}</button><button className="row-action danger" onClick={() => void deleteProject(project)}><Trash2 size={12} /> Delete</button></div></div>)}
+          {projects.map((project) => <div className="admin-project-row" key={project.id}><span className="project-icon"><FolderKanban size={16} /></span><div><strong>{project.title_en}</strong><span>{project.type ?? "Case study"} · {project.tags.join(", ") || "no tags"}</span></div><span className={project.published ? "published-pill" : "draft-pill"}>{project.published ? "Published" : "Draft"}</span><div className="row-actions"><button className="row-action" onClick={() => void reorderItems(projects, setProjects, "projects", projects.indexOf(project), -1)} title="Move up" aria-label="Move project up"><ArrowUp size={12} /></button><button className="row-action" onClick={() => void reorderItems(projects, setProjects, "projects", projects.indexOf(project), 1)} title="Move down" aria-label="Move project down"><ArrowDown size={12} /></button><button className="row-action" onClick={() => openProjectForm(project)}><Pencil size={12} /> Edit</button><button className="row-action" onClick={() => void toggleProjectPublished(project)}>{project.published ? "Unpublish" : "Publish"}</button><button className="row-action danger" onClick={() => void deleteProject(project)}><Trash2 size={12} /> Delete</button></div></div>)}
           {showProjectForm ? <form className="project-form" onSubmit={saveProject}>
             <label>Project title (EN)<input value={projectForm.titleEn} onChange={(event) => setProjectForm({ ...projectForm, titleEn: event.target.value })} placeholder="e.g. Regulatory reporting automation" required /></label>
             <label>Project title (ID)<input value={projectForm.titleId} onChange={(event) => setProjectForm({ ...projectForm, titleId: event.target.value })} placeholder="e.g. Otomasi regulatory reporting" /></label>
@@ -506,7 +603,7 @@ export default function AdminPage() {
         </div>}
 
         {active === "Certifications" && <div className="admin-panel"><div className="panel-heading"><div><span className="admin-kicker">Credentials</span><h3>Certifications & learning</h3></div></div>
-          {certifications.map((cert) => <div className="admin-project-row" key={cert.id}><span className="project-icon"><Award size={16} /></span><div><strong>{cert.name_en}</strong><span>{cert.issuer ?? ""}{cert.year ? ` · ${cert.year}` : ""}</span></div><span className={cert.published ? "published-pill" : "draft-pill"}>{cert.published ? "Published" : "Draft"}</span><div className="row-actions"><button className="row-action" onClick={() => void toggleCertification(cert)}>{cert.published ? "Unpublish" : "Publish"}</button><button className="row-action danger" onClick={() => void deleteCertification(cert)}><Trash2 size={12} /> Delete</button></div></div>)}
+          {certifications.map((cert) => <div className="admin-project-row" key={cert.id}><span className="project-icon"><Award size={16} /></span><div><strong>{cert.name_en}</strong><span>{cert.issuer ?? ""}{cert.year ? ` · ${cert.year}` : ""}</span></div><span className={cert.published ? "published-pill" : "draft-pill"}>{cert.published ? "Published" : "Draft"}</span><div className="row-actions"><button className="row-action" onClick={() => void reorderItems(certifications, setCertifications, "certifications", certifications.indexOf(cert), -1)} title="Move up" aria-label="Move certification up"><ArrowUp size={12} /></button><button className="row-action" onClick={() => void reorderItems(certifications, setCertifications, "certifications", certifications.indexOf(cert), 1)} title="Move down" aria-label="Move certification down"><ArrowDown size={12} /></button><button className="row-action" onClick={() => void toggleCertification(cert)}>{cert.published ? "Unpublish" : "Publish"}</button><button className="row-action danger" onClick={() => void deleteCertification(cert)}><Trash2 size={12} /> Delete</button></div></div>)}
           <form className="project-form" onSubmit={createCertification}>
             <label>Name (EN)<input value={certForm.nameEn} onChange={(event) => setCertForm({ ...certForm, nameEn: event.target.value })} placeholder="e.g. Data & Reporting Practice" required /></label>
             <label>Name (ID)<input value={certForm.nameId} onChange={(event) => setCertForm({ ...certForm, nameId: event.target.value })} placeholder="e.g. Praktik Data & Reporting" /></label>
@@ -517,7 +614,7 @@ export default function AdminPage() {
         </div>}
 
         {active === "Testimonials" && <div className="admin-panel"><div className="panel-heading"><div><span className="admin-kicker">Social proof</span><h3>Testimonials</h3></div></div>
-          {testimonials.map((item) => <div className="admin-project-row" key={item.id}><span className="project-icon"><Quote size={16} /></span><div><strong>“{item.quote_en.length > 70 ? `${item.quote_en.slice(0, 70)}…` : item.quote_en}”</strong><span>{item.author_name ?? ""}{item.author_role ? ` · ${item.author_role}` : ""}</span></div><span className={item.published ? "published-pill" : "draft-pill"}>{item.published ? "Published" : "Draft"}</span><div className="row-actions"><button className="row-action" onClick={() => void toggleTestimonial(item)}>{item.published ? "Unpublish" : "Publish"}</button><button className="row-action danger" onClick={() => void deleteTestimonial(item)}><Trash2 size={12} /> Delete</button></div></div>)}
+          {testimonials.map((item) => <div className="admin-project-row" key={item.id}><span className="project-icon"><Quote size={16} /></span><div><strong>“{item.quote_en.length > 70 ? `${item.quote_en.slice(0, 70)}…` : item.quote_en}”</strong><span>{item.author_name ?? ""}{item.author_role ? ` · ${item.author_role}` : ""}</span></div><span className={item.published ? "published-pill" : "draft-pill"}>{item.published ? "Published" : "Draft"}</span><div className="row-actions"><button className="row-action" onClick={() => void reorderItems(testimonials, setTestimonials, "testimonials", testimonials.indexOf(item), -1)} title="Move up" aria-label="Move testimonial up"><ArrowUp size={12} /></button><button className="row-action" onClick={() => void reorderItems(testimonials, setTestimonials, "testimonials", testimonials.indexOf(item), 1)} title="Move down" aria-label="Move testimonial down"><ArrowDown size={12} /></button><button className="row-action" onClick={() => void toggleTestimonial(item)}>{item.published ? "Unpublish" : "Publish"}</button><button className="row-action danger" onClick={() => void deleteTestimonial(item)}><Trash2 size={12} /> Delete</button></div></div>)}
           <form className="project-form" onSubmit={createTestimonial}>
             <label className="full-field">Quote (EN)<textarea value={testimonialForm.quoteEn} onChange={(event) => setTestimonialForm({ ...testimonialForm, quoteEn: event.target.value })} placeholder="What did they say about working with you?" required /></label>
             <label className="full-field">Quote (ID)<textarea value={testimonialForm.quoteId} onChange={(event) => setTestimonialForm({ ...testimonialForm, quoteId: event.target.value })} placeholder="Apa kata mereka tentang bekerja dengan Anda?" /></label>
@@ -529,8 +626,10 @@ export default function AdminPage() {
 
         {active === "Site copy" && <form className="admin-panel" onSubmit={saveSiteCopy}><div className="panel-heading"><div><span className="admin-kicker">Greetings & labels</span><h3>Site copy</h3></div><button className="admin-primary small" type="submit">Save all changes</button></div>
           <p className="field-hint">Every greeting, heading, and label on the public pages. English (EN) and Indonesian (ID) are stored separately — the site shows the one matching the visitor&apos;s language toggle. Use \n for a line break in titles.</p>
-          {copyGroups.map((group) => <div className="copy-group" key={group.group}><h3>{group.group}</h3>{group.items.map((item) => <label className="copy-field" key={item.key}>{item.label}<div className="copy-pair"><input value={copyEdits[item.key].en} onChange={(event) => setCopyEdits({ ...copyEdits, [item.key]: { ...copyEdits[item.key], en: event.target.value } })} placeholder="English" /><input value={copyEdits[item.key].id} onChange={(event) => setCopyEdits({ ...copyEdits, [item.key]: { ...copyEdits[item.key], id: event.target.value } })} placeholder="Indonesia" /></div></label>)}</div>)}
+          {copyGroups.map((group) => <div className="copy-group" key={group.group}><h3>{group.group}</h3>{group.items.map((item) => { const isBody = item.key.endsWith("Body"); return <label className="copy-field" key={item.key}>{item.label}<div className={`copy-pair${isBody ? " copy-pair-body" : ""}`}>{isBody ? <><textarea rows={6} value={copyEdits[item.key].en} onChange={(event) => setCopyEdits({ ...copyEdits, [item.key]: { ...copyEdits[item.key], en: event.target.value } })} placeholder="English" /><textarea rows={6} value={copyEdits[item.key].id} onChange={(event) => setCopyEdits({ ...copyEdits, [item.key]: { ...copyEdits[item.key], id: event.target.value } })} placeholder="Indonesia" /></> : <><input value={copyEdits[item.key].en} onChange={(event) => setCopyEdits({ ...copyEdits, [item.key]: { ...copyEdits[item.key], en: event.target.value } })} placeholder="English" /><input value={copyEdits[item.key].id} onChange={(event) => setCopyEdits({ ...copyEdits, [item.key]: { ...copyEdits[item.key], id: event.target.value } })} placeholder="Indonesia" /></>}</div></label>; })}</div>)}
         </form>}
+
+        {active === "Hero design" && <form className="admin-panel" onSubmit={saveHeroDesign}><div className="panel-heading"><div><span className="admin-kicker">Homepage appearance</span><h3>Hero design</h3></div><button className="admin-primary small" type="submit">Save design</button></div><p className="field-hint">Control the headline appearance on the homepage. Use a CSS size such as <code>clamp(54px, 7.6vw, 112px)</code> for responsive text.</p><div className="profile-form"><label>Font<select value={heroDesign.font} onChange={(event) => setHeroDesign({ ...heroDesign, font: event.target.value })}><option>Manrope</option><option>DM Sans</option><option>DM Mono</option><option>Georgia</option></select></label><label>Text size<input value={heroDesign.size} onChange={(event) => setHeroDesign({ ...heroDesign, size: event.target.value })} /></label><label>Alignment<select value={heroDesign.align} onChange={(event) => setHeroDesign({ ...heroDesign, align: event.target.value as HeroDesign["align"] })}><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select></label><label>Orientation<select value={heroDesign.orientation} onChange={(event) => setHeroDesign({ ...heroDesign, orientation: event.target.value as HeroDesign["orientation"] })}><option value="horizontal">Horizontal</option><option value="vertical">Vertical</option></select></label></div></form>}
 
         {active === "Files" && <div className="admin-panel"><div className="panel-heading"><div><span className="admin-kicker">Media library</span><h3>Upload files</h3></div></div><label className="upload-zone"><input type="file" onChange={handleUpload} accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.webp" /><UploadCloud size={27} /><strong>Drop a file here, or browse</strong><span>PDF, DOCX, JPG, PNG or WEBP · Max 10MB</span></label>{files.map((file) => <div className="file-preview" key={file.name}><FileText size={18} /><span>{file.url ? <a href={file.url} target="_blank" rel="noreferrer">{file.name}</a> : file.name}</span><span className="published-pill">{file.url ? "Uploaded" : "Ready"}</span></div>)}</div>}
 
