@@ -42,8 +42,10 @@ Without Supabase environment variables, `/admin` runs in a safe preview mode so 
 ## Content notes
 
 - English is the default public language; use the `EN / ID` control to switch to Indonesian.
-- The public site reads profile, projects, certifications, testimonials, and site copy from Supabase. Anything edited in `/admin` appears on the live site; until Supabase has content, the built-in defaults are shown.
+- The public site reads profile, projects, experience, certifications, testimonials, and site copy from Supabase. Anything edited in `/admin` appears on the live site; until Supabase has content, the built-in defaults are shown.
+- Work experience (the `/experience` page) is managed from `/admin` → **Experience**: add, edit, reorder, publish/unpublish, or delete roles. Until Supabase has rows there, the built-in CV entries from `src/lib/cv.ts` are shown.
 - Every greeting, heading, and label is editable from `/admin` → **Site copy** (both EN and ID), stored in the `site_copy` table.
+- Line breaks: press **Enter** in any multi-line field (descriptions, results, site copy bodies) — or type `\n` in single-line fields — and the break shows up on the public site.
 - Projects are routed by their **Content type**: values containing "case study" appear on `/case-studies`, everything else on `/projects`.
 - Every content type supports both English and Indonesian fields (`*_en` / `*_id`), so the `EN / ID` toggle switches real translations, not just UI labels.
 - The starter CV is copied to `public/Thomas_Oddy_ATS_CV.docx` for the Download CV action (replaced by the CV uploaded from `/admin` → Profile once Supabase Storage is connected).

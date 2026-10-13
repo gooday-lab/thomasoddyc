@@ -39,6 +39,9 @@ type SiteContextValue = {
 
 const SiteContext = createContext<SiteContextValue | null>(null);
 
+/** Real newlines and literal "\n" both become line breaks in rendered text. */
+const withBreaks = (text: string) => text.replace(/\\n/g, "\n");
+
 export function SiteProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguage] = useState<Language>("en");
   const [profile, setProfile] = useState<ProfileRecord>(defaultProfile);
@@ -81,6 +84,7 @@ export function SiteProvider({ children }: { children: React.ReactNode }) {
       const override = isId ? overrides[key]?.id : overrides[key]?.en;
       if (override) t[key] = override;
     }
+    for (const key of Object.keys(t) as CopyKey[]) t[key] = withBreaks(t[key]);
     return {
       language,
       setLanguage,
@@ -88,7 +92,7 @@ export function SiteProvider({ children }: { children: React.ReactNode }) {
       t,
       profile,
       heroDesign,
-      pick: (en, id) => (isId && id ? id : en) ?? "",
+      pick: (en, id) => withBreaks((isId && id ? id : en) ?? ""),
     };
   }, [language, profile, overrides, heroDesign]);
 

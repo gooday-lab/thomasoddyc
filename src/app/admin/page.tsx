@@ -7,6 +7,7 @@ import {
   ArrowDown,
   ArrowUp,
   BarChart3,
+  Briefcase,
   CheckCircle2,
   FileText,
   FolderKanban,
@@ -24,22 +25,25 @@ import {
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import {
   defaultCertifications,
+  defaultExperience,
   defaultProjects,
   defaultTestimonials,
   fetchCertifications,
+  fetchExperience,
   fetchProjects,
   fetchSiteCopy,
   fetchTestimonials,
   formatUpdated,
   slugify,
   type CertificationRecord,
+  type ExperienceRecord,
   type ProjectRecord,
   type TestimonialRecord,
 } from "@/lib/content";
 import { copy, copyGroups, copyKeys, type CopyKey } from "@/lib/copy";
 import { defaultHeroDesign, type HeroDesign } from "@/components/site-context";
 
-type TabName = "Overview" | "Projects" | "Certifications" | "Testimonials" | "Site copy" | "Hero design" | "Files" | "Profile";
+type TabName = "Overview" | "Projects" | "Experience" | "Certifications" | "Testimonials" | "Site copy" | "Hero design" | "Files" | "Profile";
 
 const isLocalId = (id: string) => id.startsWith("default-");
 
@@ -55,6 +59,17 @@ const emptyProjectForm = {
   impactLabelEn: "",
   impactLabelId: "",
   tags: "",
+  fileUrl: "",
+};
+
+const emptyExperienceForm = {
+  years: "",
+  company: "",
+  role: "",
+  bodyEn: "",
+  bodyId: "",
+  resultEn: "",
+  resultId: "",
 };
 
 const initialCopyEdits = () =>
@@ -105,6 +120,7 @@ export default function AdminPage() {
   const [projects, setProjects] = useState<ProjectRecord[]>(defaultProjects);
   const [certifications, setCertifications] = useState<CertificationRecord[]>(defaultCertifications);
   const [testimonials, setTestimonials] = useState<TestimonialRecord[]>(defaultTestimonials);
+  const [experienceItems, setExperienceItems] = useState<ExperienceRecord[]>(defaultExperience);
   const [files, setFiles] = useState<{ name: string; url: string }[]>([]);
 
   const [showProjectForm, setShowProjectForm] = useState(false);
@@ -112,6 +128,9 @@ export default function AdminPage() {
   const [projectForm, setProjectForm] = useState(emptyProjectForm);
   const [certForm, setCertForm] = useState({ nameEn: "", nameId: "", issuer: "", year: "" });
   const [testimonialForm, setTestimonialForm] = useState({ quoteEn: "", quoteId: "", authorName: "", authorRole: "" });
+  const [showExperienceForm, setShowExperienceForm] = useState(false);
+  const [editingExperienceId, setEditingExperienceId] = useState<string | null>(null);
+  const [experienceForm, setExperienceForm] = useState(emptyExperienceForm);
   const [copyEdits, setCopyEdits] = useState(initialCopyEdits);
   const [heroDesign, setHeroDesign] = useState<HeroDesign>(defaultHeroDesign);
 
@@ -129,17 +148,19 @@ export default function AdminPage() {
     const client = supabase;
     if (!loggedIn || !client) return;
     const loadAll = async () => {
-      const [profile, projectRows, certRows, testimonialRows, copyRows] = await Promise.all([
+      const [profile, projectRows, certRows, testimonialRows, experienceRows, copyRows] = await Promise.all([
         client.from("profile").select("*").limit(1).maybeSingle(),
         fetchProjects({ publishedOnly: false }),
         fetchCertifications({ publishedOnly: false }),
         fetchTestimonials({ publishedOnly: false }),
+        fetchExperience({ publishedOnly: false }),
         fetchSiteCopy(),
       ]);
       if (profile.error) setMessage(profile.error.message);
       if (projectRows.length) setProjects(projectRows);
       if (certRows.length) setCertifications(certRows);
       if (testimonialRows.length) setTestimonials(testimonialRows);
+      if (experienceRows.length) setExperienceItems(experienceRows);
       if (copyRows.length) {
         const setting = (key: string) => copyRows.find((row) => row.copy_key === key)?.value_en;
         setHeroDesign({
@@ -315,6 +336,7 @@ export default function AdminPage() {
       impactLabelEn: project.impact_label_en ?? "",
       impactLabelId: project.impact_label_id ?? "",
       tags: project.tags.join(", "),
+      fileUrl: project.file_url ?? "",
     });
   };
 
@@ -333,6 +355,7 @@ export default function AdminPage() {
       impact_label_en: projectForm.impactLabelEn.trim() || null,
       impact_label_id: projectForm.impactLabelId.trim() || null,
       tags: projectForm.tags.split(",").map((tag) => tag.trim()).filter(Boolean),
+      file_url: projectForm.fileUrl.trim() || null,
       sort_order: editingProjectId ? (projects.find((item) => item.id === editingProjectId)?.sort_order ?? projects.length + 1) : (projects.length ? Math.max(...projects.map((item) => item.sort_order)) + 1 : 1),
       updated_at: new Date().toISOString(),
     };
@@ -369,6 +392,7 @@ export default function AdminPage() {
         impact_label_en: payload.impact_label_en,
         impact_label_id: payload.impact_label_id,
         tags: payload.tags,
+        file_url: payload.file_url,
         cover_url: null,
         sort_order: projects.length + 1,
         published: false,
@@ -534,6 +558,107 @@ export default function AdminPage() {
     setMessage("Testimonial deleted.");
   };
 
+  const openExperienceForm = (item?: ExperienceRecord) => {
+    setShowExperienceForm(true);
+    if (!item) {
+      setEditingExperienceId(null);
+      setExperienceForm(emptyExperienceForm);
+      return;
+    }
+    setEditingExperienceId(item.id);
+    setExperienceForm({
+      years: item.years,
+      company: item.company,
+      role: item.role,
+      bodyEn: item.body_en ?? "",
+      bodyId: item.body_id ?? "",
+      resultEn: item.result_en ?? "",
+      resultId: item.result_id ?? "",
+    });
+  };
+
+  const saveExperience = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const company = experienceForm.company.trim();
+    const role = experienceForm.role.trim();
+    if (!company || !role) return;
+    const payload = {
+      years: experienceForm.years.trim(),
+      company,
+      role,
+      body_en: experienceForm.bodyEn.trim() || null,
+      body_id: experienceForm.bodyId.trim() || null,
+      result_en: experienceForm.resultEn.trim() || null,
+      result_id: experienceForm.resultId.trim() || null,
+      updated_at: new Date().toISOString(),
+    };
+
+    if (supabase) {
+      const editingRow = experienceItems.find((item) => item.id === editingExperienceId);
+      if (editingExperienceId && editingRow && !isLocalId(editingExperienceId)) {
+        const { error } = await supabase.from("experience").update(payload).eq("id", editingExperienceId);
+        if (error) {
+          setMessage(error.message);
+          return;
+        }
+        setExperienceItems((current) => current.map((item) => (item.id === editingExperienceId ? { ...item, ...payload } : item)));
+        setMessage("Experience updated.");
+      } else {
+        const row = {
+          ...payload,
+          published: true,
+          sort_order: experienceItems.length ? Math.max(...experienceItems.map((item) => item.sort_order)) + 1 : 1,
+        };
+        const { data, error } = await supabase.from("experience").insert(row).select("*").single();
+        if (error) {
+          setMessage(error.message);
+          return;
+        }
+        setExperienceItems((current) => [...current, data as ExperienceRecord]);
+        setMessage("Experience added.");
+      }
+    } else {
+      const draft: ExperienceRecord = {
+        id: editingExperienceId ?? `default-experience-${Date.now()}`,
+        ...payload,
+        sort_order: experienceItems.length ? Math.max(...experienceItems.map((item) => item.sort_order)) + 1 : 1,
+        published: true,
+      };
+      setExperienceItems((current) =>
+        editingExperienceId ? current.map((item) => (item.id === editingExperienceId ? draft : item)) : [...current, draft],
+      );
+      setMessage("Experience saved in preview mode. Connect Supabase to persist it.");
+    }
+    setExperienceForm(emptyExperienceForm);
+    setEditingExperienceId(null);
+    setShowExperienceForm(false);
+  };
+
+  const toggleExperiencePublished = async (item: ExperienceRecord) => {
+    const next = !item.published;
+    if (supabase && !isLocalId(item.id)) {
+      const { error } = await supabase.from("experience").update({ published: next }).eq("id", item.id);
+      if (error) {
+        setMessage(error.message);
+        return;
+      }
+    }
+    setExperienceItems((current) => current.map((row) => (row.id === item.id ? { ...row, published: next } : row)));
+    setMessage(next ? `"${item.role}" is now published.` : `"${item.role}" moved back to draft.`);
+  };
+
+  const deleteExperience = async (item: ExperienceRecord) => {
+    if (supabase && !isLocalId(item.id)) {
+      const { error } = await supabase.from("experience").delete().eq("id", item.id);
+      if (error) {
+        setMessage(error.message);
+        return;
+      }
+    }
+    setExperienceItems((current) => current.filter((row) => row.id !== item.id));
+    setMessage(`"${item.role}" deleted.`);
+  };
+
   if (!loggedIn) {
     return (
       <main className="admin-login-page">
@@ -557,6 +682,7 @@ export default function AdminPage() {
   const menu: { name: TabName; icon: typeof LayoutDashboard }[] = [
     { name: "Overview", icon: LayoutDashboard },
     { name: "Projects", icon: FolderKanban },
+    { name: "Experience", icon: Briefcase },
     { name: "Certifications", icon: Award },
     { name: "Testimonials", icon: Quote },
     { name: "Site copy", icon: Sparkles },
@@ -582,7 +708,7 @@ export default function AdminPage() {
 
         {active === "Overview" && <>
           <div className="admin-welcome"><div><span className="admin-kicker">Good to see you, Thomas</span><h2>Your story, kept current.</h2><p>Update your professional presence without touching the code.</p></div><BarChart3 size={47} /></div>
-          <div className="admin-stats"><div><span>Published projects</span><strong>{pad(publishedCount)}</strong><small>{projects.length - publishedCount > 0 ? `${projects.length - publishedCount} draft(s) in progress` : "+ add your next one"}</small></div><div><span>Content items</span><strong>{pad(certifications.length + testimonials.length)}</strong><small>Certifications & testimonials</small></div><div><span>Site status</span><strong className="status-live">Live</strong><small>{isSupabaseConfigured ? "Supabase connected" : "Preview mode"}</small></div></div>
+          <div className="admin-stats"><div><span>Published projects</span><strong>{pad(publishedCount)}</strong><small>{projects.length - publishedCount > 0 ? `${projects.length - publishedCount} draft(s) in progress` : "+ add your next one"}</small></div><div><span>Content items</span><strong>{pad(experienceItems.length + certifications.length + testimonials.length)}</strong><small>Experience, certifications & testimonials</small></div><div><span>Site status</span><strong className="status-live">Live</strong><small>{isSupabaseConfigured ? "Supabase connected" : "Preview mode"}</small></div></div>
           <div className="admin-panel"><div className="panel-heading"><div><span className="admin-kicker">Content overview</span><h3>Recent projects</h3></div><button className="admin-outline" onClick={() => { setActive("Projects"); openProjectForm(); }}><Plus size={15} /> New project</button></div>{projects.map((project) => <div className="admin-project-row" key={project.id}><span className="project-icon"><FolderKanban size={16} /></span><div><strong>{project.title_en}</strong><span>{project.type ?? "Case study"}</span></div><span className={project.published ? "published-pill" : "draft-pill"}>{project.published ? "Published" : "Draft"}</span><span className="admin-updated">{formatUpdated(project.updated_at ?? project.created_at)}</span><div className="row-actions"><button className="row-action" onClick={() => { setActive("Projects"); openProjectForm(project); }}><Pencil size={12} /> Edit</button></div></div>)}</div>
         </>}
 
@@ -598,8 +724,24 @@ export default function AdminPage() {
             <label className="full-field">Short description (EN)<textarea value={projectForm.bodyEn} onChange={(event) => setProjectForm({ ...projectForm, bodyEn: event.target.value })} placeholder="What problem did you solve, and how?" /></label>
             <label className="full-field">Short description (ID)<textarea value={projectForm.bodyId} onChange={(event) => setProjectForm({ ...projectForm, bodyId: event.target.value })} placeholder="Masalah apa yang Anda selesaikan, dan bagaimana?" /></label>
             <label className="full-field">Tools / tags<input value={projectForm.tags} onChange={(event) => setProjectForm({ ...projectForm, tags: event.target.value })} placeholder="Excel VBA, Reconciliation, Data validation" /></label>
+            <label className="full-field">Downloadable project file<input type="file" accept=".xlsx,.xls,.pdf,.docx,.csv,.zip" onChange={(event) => { const file = event.target.files?.[0]; if (file) void uploadToLibrary(file).then((url) => { if (url) setProjectForm((current) => ({ ...current, fileUrl: url })); }); }} />{projectForm.fileUrl && <small><a href={projectForm.fileUrl} target="_blank" rel="noreferrer">View current file ↘</a></small>}<small className="field-hint">Visitors get a download link on the project page. Max 10MB.</small></label>
             <div className="form-actions full-field"><button type="button" className="admin-outline" onClick={() => { setShowProjectForm(false); setEditingProjectId(null); setProjectForm(emptyProjectForm); }}>Cancel</button><button type="submit" className="admin-primary small">{editingProjectId ? "Save changes" : "Save as draft"} <span>→</span></button></div>
           </form> : projects.length === 0 && <div className="empty-admin"><FolderKanban size={30} /><h3>Your projects live here.</h3><p>Add a project with its English and Indonesian story, impact metrics, tools, and images.</p><button className="admin-primary" onClick={() => openProjectForm()}>Create first project <span>→</span></button></div>}
+        </div>}
+
+        {active === "Experience" && <div className="admin-panel"><div className="panel-heading"><div><span className="admin-kicker">Career history</span><h3>Work experience</h3></div><button className="admin-primary small" onClick={() => openExperienceForm()}><Plus size={15} /> Add experience</button></div>
+          {experienceItems.map((item) => <div className="admin-project-row" key={item.id}><span className="project-icon"><Briefcase size={16} /></span><div><strong>{item.role}</strong><span>{item.company} · {item.years}</span></div><span className={item.published ? "published-pill" : "draft-pill"}>{item.published ? "Published" : "Draft"}</span><div className="row-actions"><button className="row-action" onClick={() => void reorderItems(experienceItems, setExperienceItems, "experience", experienceItems.indexOf(item), -1)} title="Move up" aria-label="Move experience up"><ArrowUp size={12} /></button><button className="row-action" onClick={() => void reorderItems(experienceItems, setExperienceItems, "experience", experienceItems.indexOf(item), 1)} title="Move down" aria-label="Move experience down"><ArrowDown size={12} /></button><button className="row-action" onClick={() => openExperienceForm(item)}><Pencil size={12} /> Edit</button><button className="row-action" onClick={() => void toggleExperiencePublished(item)}>{item.published ? "Unpublish" : "Publish"}</button><button className="row-action danger" onClick={() => void deleteExperience(item)}><Trash2 size={12} /> Delete</button></div></div>)}
+          {showExperienceForm ? <form className="project-form" onSubmit={saveExperience}>
+            <p className="field-hint full-field">Press Enter for a line break — in single-line fields, type \n instead.</p>
+            <label>Role<input value={experienceForm.role} onChange={(event) => setExperienceForm({ ...experienceForm, role: event.target.value })} placeholder="e.g. Credit Reporting" required /></label>
+            <label>Company<input value={experienceForm.company} onChange={(event) => setExperienceForm({ ...experienceForm, company: event.target.value })} placeholder="e.g. PT. Bank Maspion Indonesia Tbk" required /></label>
+            <label>Period<input value={experienceForm.years} onChange={(event) => setExperienceForm({ ...experienceForm, years: event.target.value })} placeholder="e.g. Mar 2022 — Aug 2026" /></label>
+            <label className="full-field">Description (EN)<textarea value={experienceForm.bodyEn} onChange={(event) => setExperienceForm({ ...experienceForm, bodyEn: event.target.value })} placeholder="What did you do in this role?" /></label>
+            <label className="full-field">Description (ID)<textarea value={experienceForm.bodyId} onChange={(event) => setExperienceForm({ ...experienceForm, bodyId: event.target.value })} placeholder="Apa yang Anda lakukan di peran ini?" /></label>
+            <label>Result (EN)<textarea rows={2} value={experienceForm.resultEn} onChange={(event) => setExperienceForm({ ...experienceForm, resultEn: event.target.value })} placeholder="e.g. Reporting time reduced from 8 hours to 2 hours." /></label>
+            <label>Result (ID)<textarea rows={2} value={experienceForm.resultId} onChange={(event) => setExperienceForm({ ...experienceForm, resultId: event.target.value })} placeholder="e.g. Waktu reporting turun dari 8 jam menjadi 2 jam." /></label>
+            <div className="form-actions full-field"><button type="button" className="admin-outline" onClick={() => { setShowExperienceForm(false); setEditingExperienceId(null); setExperienceForm(emptyExperienceForm); }}>Cancel</button><button type="submit" className="admin-primary small">{editingExperienceId ? "Save changes" : "Add experience"} <span>→</span></button></div>
+          </form> : experienceItems.length === 0 && <div className="empty-admin"><Briefcase size={30} /><h3>Your experience lives here.</h3><p>Add each role with its period, company, and the result you delivered.</p><button className="admin-primary" onClick={() => openExperienceForm()}>Add first experience <span>→</span></button></div>}
         </div>}
 
         {active === "Certifications" && <div className="admin-panel"><div className="panel-heading"><div><span className="admin-kicker">Credentials</span><h3>Certifications & learning</h3></div></div>
@@ -625,13 +767,13 @@ export default function AdminPage() {
         </div>}
 
         {active === "Site copy" && <form className="admin-panel" onSubmit={saveSiteCopy}><div className="panel-heading"><div><span className="admin-kicker">Greetings & labels</span><h3>Site copy</h3></div><button className="admin-primary small" type="submit">Save all changes</button></div>
-          <p className="field-hint">Every greeting, heading, and label on the public pages. English (EN) and Indonesian (ID) are stored separately — the site shows the one matching the visitor&apos;s language toggle. Use \n for a line break in titles.</p>
+          <p className="field-hint">Every greeting, heading, and label on the public pages. English (EN) and Indonesian (ID) are stored separately — the site shows the one matching the visitor&apos;s language toggle. Use \n (or press Enter in the body fields) for a line break.</p>
           {copyGroups.map((group) => <div className="copy-group" key={group.group}><h3>{group.group}</h3>{group.items.map((item) => { const isBody = item.key.endsWith("Body"); return <label className="copy-field" key={item.key}>{item.label}<div className={`copy-pair${isBody ? " copy-pair-body" : ""}`}>{isBody ? <><textarea rows={6} value={copyEdits[item.key].en} onChange={(event) => setCopyEdits({ ...copyEdits, [item.key]: { ...copyEdits[item.key], en: event.target.value } })} placeholder="English" /><textarea rows={6} value={copyEdits[item.key].id} onChange={(event) => setCopyEdits({ ...copyEdits, [item.key]: { ...copyEdits[item.key], id: event.target.value } })} placeholder="Indonesia" /></> : <><input value={copyEdits[item.key].en} onChange={(event) => setCopyEdits({ ...copyEdits, [item.key]: { ...copyEdits[item.key], en: event.target.value } })} placeholder="English" /><input value={copyEdits[item.key].id} onChange={(event) => setCopyEdits({ ...copyEdits, [item.key]: { ...copyEdits[item.key], id: event.target.value } })} placeholder="Indonesia" /></>}</div></label>; })}</div>)}
         </form>}
 
         {active === "Hero design" && <form className="admin-panel" onSubmit={saveHeroDesign}><div className="panel-heading"><div><span className="admin-kicker">Homepage appearance</span><h3>Hero design</h3></div><button className="admin-primary small" type="submit">Save design</button></div><p className="field-hint">Control the headline appearance on the homepage. Use a CSS size such as <code>clamp(54px, 7.6vw, 112px)</code> for responsive text.</p><div className="profile-form"><label>Font<select value={heroDesign.font} onChange={(event) => setHeroDesign({ ...heroDesign, font: event.target.value })}><option>Manrope</option><option>DM Sans</option><option>DM Mono</option><option>Georgia</option></select></label><label>Text size<input value={heroDesign.size} onChange={(event) => setHeroDesign({ ...heroDesign, size: event.target.value })} /></label><label>Alignment<select value={heroDesign.align} onChange={(event) => setHeroDesign({ ...heroDesign, align: event.target.value as HeroDesign["align"] })}><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select></label><label>Orientation<select value={heroDesign.orientation} onChange={(event) => setHeroDesign({ ...heroDesign, orientation: event.target.value as HeroDesign["orientation"] })}><option value="horizontal">Horizontal</option><option value="vertical">Vertical</option></select></label></div></form>}
 
-        {active === "Files" && <div className="admin-panel"><div className="panel-heading"><div><span className="admin-kicker">Media library</span><h3>Upload files</h3></div></div><label className="upload-zone"><input type="file" onChange={handleUpload} accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.webp" /><UploadCloud size={27} /><strong>Drop a file here, or browse</strong><span>PDF, DOCX, JPG, PNG or WEBP · Max 10MB</span></label>{files.map((file) => <div className="file-preview" key={file.name}><FileText size={18} /><span>{file.url ? <a href={file.url} target="_blank" rel="noreferrer">{file.name}</a> : file.name}</span><span className="published-pill">{file.url ? "Uploaded" : "Ready"}</span></div>)}</div>}
+        {active === "Files" && <div className="admin-panel"><div className="panel-heading"><div><span className="admin-kicker">Media library</span><h3>Upload files</h3></div></div><label className="upload-zone"><input type="file" onChange={handleUpload} accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.webp,.xlsx,.csv" /><UploadCloud size={27} /><strong>Drop a file here, or browse</strong><span>PDF, DOCX, JPG, PNG, WEBP, XLSX or CSV · Max 10MB</span></label>{files.map((file) => <div className="file-preview" key={file.name}><FileText size={18} /><span>{file.url ? <a href={file.url} target="_blank" rel="noreferrer">{file.name}</a> : file.name}</span><span className="published-pill">{file.url ? "Uploaded" : "Ready"}</span></div>)}</div>}
 
         {active === "Profile" && <form className="admin-panel" onSubmit={saveProfile}><div className="panel-heading"><div><span className="admin-kicker">Public identity</span><h3>Profile details</h3></div><button className="admin-primary small" type="submit">Save changes</button></div><div className="profile-form"><label>Full name<input value={profileName} onChange={(event) => setProfileName(event.target.value)} /></label><label>Primary role<input value={profileRole} onChange={(event) => setProfileRole(event.target.value)} /></label><label>Public email<input type="email" value={profileEmail} onChange={(event) => setProfileEmail(event.target.value)} /></label><label>LinkedIn URL<input value={profileLinkedIn} onChange={(event) => setProfileLinkedIn(event.target.value)} /></label><label className="full-field">Short introduction (EN)<textarea value={profileBio} onChange={(event) => setProfileBio(event.target.value)} /></label><label className="full-field">Short introduction (ID)<textarea value={profileBioId} onChange={(event) => setProfileBioId(event.target.value)} /></label><label>Profile photo<input type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => uploadProfileAsset(event, "photo")} />{profilePhotoUrl && <small>Uploaded photo is ready to save.</small>}</label><label>CV file<input type="file" accept=".pdf,.doc,.docx" onChange={(event) => uploadProfileAsset(event, "cv")} />{cvUrl && <small><a href={cvUrl} target="_blank" rel="noreferrer">View current CV ↗</a></small>}</label></div></form>}
       </section>

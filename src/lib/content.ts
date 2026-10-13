@@ -1,4 +1,5 @@
 import { supabase } from "./supabase";
+import { experience as cvExperience } from "./cv";
 
 /**
  * Shared content layer for the public portfolio and the admin workspace.
@@ -20,6 +21,7 @@ export type ProjectRecord = {
   impact_label_id: string | null;
   tags: string[];
   cover_url: string | null;
+  file_url: string | null;
   sort_order: number;
   published: boolean;
   created_at?: string;
@@ -46,6 +48,21 @@ export type TestimonialRecord = {
   avatar_url: string | null;
   sort_order: number;
   published: boolean;
+};
+
+export type ExperienceRecord = {
+  id: string;
+  years: string;
+  company: string;
+  role: string;
+  body_en: string | null;
+  body_id: string | null;
+  result_en: string | null;
+  result_id: string | null;
+  sort_order: number;
+  published: boolean;
+  created_at?: string;
+  updated_at?: string | null;
 };
 
 export type ProfileRecord = {
@@ -91,6 +108,7 @@ export const defaultProjects: ProjectRecord[] = [
     impact_label_id: "waktu proses lebih singkat",
     tags: ["Excel VBA", "Reconciliation", "Data validation"],
     cover_url: null,
+    file_url: null,
     sort_order: 1,
     published: true,
   },
@@ -109,6 +127,7 @@ export const defaultProjects: ProjectRecord[] = [
     impact_label_id: "hari per laporan",
     tags: ["Advanced Excel", "Forecasting", "Management reporting"],
     cover_url: null,
+    file_url: null,
     sort_order: 2,
     published: true,
   },
@@ -151,6 +170,20 @@ export const defaultTestimonials: TestimonialRecord[] = [
     published: true,
   },
 ];
+
+/** Built-in work history, seeded from the CV facts in `cv.ts`. */
+export const defaultExperience: ExperienceRecord[] = cvExperience.map((item, index) => ({
+  id: `default-experience-${index + 1}`,
+  years: item.years,
+  company: item.company,
+  role: item.role,
+  body_en: item.body,
+  body_id: null,
+  result_en: item.result,
+  result_id: null,
+  sort_order: index + 1,
+  published: true,
+}));
 
 /** A UI copy override stored in the `site_copy` table (admin → Site copy). */
 export type SiteCopyRecord = {
@@ -211,6 +244,19 @@ export async function fetchTestimonials(options?: { publishedOnly?: boolean }): 
   const { data, error } = await query;
   if (error || !data) return [];
   return data as TestimonialRecord[];
+}
+
+export async function fetchExperience(options?: { publishedOnly?: boolean }): Promise<ExperienceRecord[]> {
+  const publishedOnly = options?.publishedOnly ?? true;
+  if (!supabase) return [];
+  let query = supabase
+    .from("experience")
+    .select("*")
+    .order("sort_order", { ascending: true });
+  if (publishedOnly) query = query.eq("published", true);
+  const { data, error } = await query;
+  if (error || !data) return [];
+  return data as ExperienceRecord[];
 }
 
 /** Display label for an item's last update, used in the admin lists. */

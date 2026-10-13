@@ -40,6 +40,7 @@ alter table public.projects
   add column if not exists impact_label_id text,
   add column if not exists tags text[] default '{}',
   add column if not exists cover_url text,
+  add column if not exists file_url text,
   add column if not exists sort_order integer default 0,
   add column if not exists published boolean default false,
   add column if not exists created_at timestamptz default now(),

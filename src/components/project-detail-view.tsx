@@ -83,6 +83,9 @@ export default function ProjectDetailView({ slug }: { slug: string }) {
               </div>
             )}
             <div className="detail-actions">
+              {project.file_url && (
+                <a href={project.file_url} download className="button button-dark">Download project file <ArrowUpRight size={16} /></a>
+              )}
               <Link href="/contact" className="button button-dark">{t.projectCta} <ArrowUpRight size={16} /></Link>
               <Link href={listPath(project)} className="text-link">{t.backToList}</Link>
             </div>
