@@ -332,3 +332,8 @@ blockquote { font-family: "Manrope", sans-serif; font-size: clamp(28px, 4vw, 52p
 .row-action.danger:hover { color: #a45344; border-color: #a45344; }
 @media (max-width: 700px) { .admin-project-row { flex-wrap: wrap; } .admin-project-row .row-actions { width: 100%; justify-content: flex-end; } }
 @media (max-width: 700px) { .project-form { grid-template-columns: 1fr; } .project-form .full-field, .form-actions { grid-column: auto; } }
+
+/* Project / case-study detail hero image */
+.detail-cover { margin: -24px 0 56px; max-width: 1100px; }
+.detail-cover img { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 6px; }
+@media (max-width: 700px) { .detail-cover { margin-bottom: 38px; } }

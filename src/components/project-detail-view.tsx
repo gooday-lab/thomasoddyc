@@ -72,6 +72,11 @@ export default function ProjectDetailView({ slug }: { slug: string }) {
             <p>{pick(project.body_en, project.body_id)}</p>
           </div>
         </div>
+        {project.cover_url && (
+          <figure className="detail-cover">
+            <img src={project.cover_url} alt={pick(project.title_en, project.title_id)} loading="lazy" />
+          </figure>
+        )}
         <div className="two-column">
           <div />
           <div>
