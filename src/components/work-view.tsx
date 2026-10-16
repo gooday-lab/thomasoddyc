@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { ArrowUpRight, MoveUpRight } from "lucide-react";
 import { useSite } from "./site-context";
 import { MultiLine, SectionLabel, SiteShell } from "./site-chrome";
-import { defaultProjects, fetchProjects, type ProjectRecord } from "@/lib/content";
+import { defaultProjects, fetchProjects, mergeProjects, type ProjectRecord } from "@/lib/content";
 
 const isCaseStudy = (project: ProjectRecord) => /case\s*stud/i.test(project.type ?? "");
 
@@ -16,7 +16,7 @@ export default function WorkView({ variant }: { variant: "case-studies" | "proje
   useEffect(() => {
     let cancelled = false;
     fetchProjects().then((rows) => {
-      if (!cancelled && rows.length) setProjects(rows);
+      if (!cancelled) setProjects(mergeProjects(defaultProjects, rows));
     });
     return () => {
       cancelled = true;

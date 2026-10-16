@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { useSite } from "./site-context";
 import { MultiLine, SectionLabel, SiteShell } from "./site-chrome";
-import { defaultProjects, fetchProjects, type ProjectRecord } from "@/lib/content";
+import { defaultProjects, fetchProjects, mergeProjects, type ProjectRecord } from "@/lib/content";
 
 const listPath = (project: ProjectRecord) =>
   /case\s*stud/i.test(project.type ?? "") ? "/case-studies" : "/projects";
@@ -25,7 +25,7 @@ export default function ProjectDetailView({ slug }: { slug: string }) {
     const load = async () => {
       const rows = await fetchProjects();
       if (cancelled) return;
-      const pool = rows.length ? rows : defaultProjects;
+      const pool = rows.length ? mergeProjects(defaultProjects, rows) : defaultProjects;
       setProject(pool.find((item) => item.slug === slug) ?? null);
       setLoading(false);
     };

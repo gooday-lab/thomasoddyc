@@ -131,7 +131,62 @@ export const defaultProjects: ProjectRecord[] = [
     sort_order: 2,
     published: true,
   },
+  {
+    id: "default-project-3",
+    slug: "data-validation-rule-engine-excel-vba",
+    title_en: "Data Validation Rule Engine (Excel VBA)",
+    title_id: "Mesin Validasi Data Berbasis Aturan (Excel VBA)",
+    type: "Portfolio Project",
+    body_en:
+      "Portfolio project - all data is fictional and simulated.\n\nI built a regulation-driven data validation system in Microsoft Excel VBA: 18 configurable rules over 14 fields, deterministic auto-fix, per-violation reporting, split exports, a full audit trail, and a separate refreshable dashboard workbook.\n\n1. The regulation is configuration, not code. One Rules sheet defines each field as mandatory or optional, with patterns, numeric bounds, reference lists, cross-field maps, severity and an auto-fix switch. A rule change is a one-row edit.\n\n2. The engine checks 5,000 transaction records against the full rule set in seconds: 3,851 accepted, 413 accepted with warnings, and 736 rejected with a documented reason.\n\n3. It caught 1,263 rule violations before reporting and repaired 5,256 cells automatically: name casing, stray spaces, phone separators, canonical reference values, category rebuilt from the product map, dates normalised. Every change is written to a fix audit column.\n\n4. Each run delivers an error report with one row per violation, valid and invalid CSV splits for downstream systems, and an append-only audit log with run id, user, counts and duration.\n\n5. A separate dashboard workbook rebuilds 7 KPI cards and 6 native Excel charts from the engine's statistics export with one click.\n\nEvery number above is recalculated live inside the workbook.",
+    body_id:
+      "Proyek portofolio - seluruh data bersifat fiktif dan simulasi.\n\nSaya membangun sistem validasi data berbasis regulasi menggunakan Microsoft Excel VBA: 18 aturan yang dapat dikonfigurasi untuk 14 kolom, perbaikan otomatis yang deterministik, laporan per pelanggaran, ekspor data valid/tidak valid, jejak audit lengkap, serta workbook dashboard terpisah yang dapat disegarkan.\n\n1. Regulasi menjadi konfigurasi, bukan kode. Satu sheet Rules menentukan setiap kolom wajib atau opsional, beserta pola format, batas angka, daftar referensi, peta lintas kolom, tingkat keparahan, dan sakelar perbaikan otomatis. Perubahan aturan cukup dilakukan dengan mengedit satu baris.\n\n2. Mesin memeriksa 5.000 catatan transaksi terhadap seluruh aturan dalam hitungan detik: 3.851 diterima, 413 diterima dengan peringatan, dan 736 ditolak dengan alasan yang terdokumentasi.\n\n3. Sebanyak 1.263 pelanggaran aturan tertangkap sebelum masuk laporan, dan 5.256 sel diperbaiki otomatis: huruf besar-kecil nama, spasi berlebih, pemisah nomor telepon, nilai referensi kanonik, kategori dibangun ulang dari peta produk, serta normalisasi tanggal. Setiap perubahan dicatat pada kolom audit perbaikan.\n\n4. Setiap proses menghasilkan laporan kesalahan dengan satu baris per pelanggaran, pembagian CSV valid dan tidak valid untuk sistem lain, serta log audit yang hanya bertambah, berisi id proses, pengguna, jumlah catatan, dan durasi.\n\n5. Workbook dashboard terpisah membangun ulang 7 kartu KPI dan 6 chart Excel dari ekspor statistik mesin hanya dengan satu klik.\n\nSetiap angka di atas dihitung ulang secara langsung di dalam workbook.",
+    impact_value: "77.02%",
+    impact_label_en: "first-pass compliance",
+    impact_label_id: "kepatuhan pada pengiriman pertama",
+    tags: ["Excel VBA", "Data Validation", "Rule Engine", "Data Quality", "Automation", "Dashboard", "Audit Trail"],
+    cover_url: null,
+    file_url: null,
+    sort_order: 3,
+    published: true,
+  },
+  {
+    id: "default-project-4",
+    slug: "enforcing-a-data-regulation-with-18-rules",
+    title_en: "Enforcing a data regulation with 18 rules in Excel.",
+    title_id: "Menerapkan regulasi data dengan 18 aturan di Excel.",
+    type: "Case study",
+    body_en:
+      "Portfolio case study - all data is fictional and simulated.\n\nProblem. A data-governance regulation classifies every transaction field as mandatory or optional and defines what valid means for each one. With 5,000 records per batch, manual checking is slow, inconsistent and impossible to audit.\n\nApproach. I treated the regulation as configuration. A Rules sheet holds 18 rules - patterns, lengths, reference lookups, a cross-field product and category map, numeric ranges, date windows and composite duplicate detection - each with a severity and an auto-fix switch. A VBA engine runs deterministic clean-up first (casing, spaces, phone formats, canonical reference values, dates), then marks every cell it rejects and gives each row a verdict: valid, warning or invalid.\n\nResult. Of 5,000 records, 3,851 were accepted and 413 accepted with warnings; 736 were rejected with a precise reason. The engine caught 1,263 violations before they reached reporting and repaired 5,256 cells automatically. Compliance stopped being an opinion: it became a 77.02 percent figure with an error report, split exports and an audit log behind it.",
+    body_id:
+      "Studi kasus portofolio - seluruh data bersifat fiktif dan simulasi.\n\nMasalah. Sebuah regulasi tata kelola data mengklasifikasikan setiap kolom transaksi sebagai wajib atau opsional, dan menentukan arti valid untuk masing-masing kolom. Dengan 5.000 catatan per batch, pemeriksaan manual menjadi lambat, tidak konsisten, dan tidak dapat diaudit.\n\nPendekatan. Saya memperlakukan regulasi sebagai konfigurasi. Sheet Rules berisi 18 aturan - pola format, panjang teks, daftar referensi, peta produk dan kategori lintas kolom, rentang angka, rentang tanggal, serta deteksi duplikat gabungan - masing-masing dengan tingkat keparahan dan sakelar perbaikan otomatis. Mesin VBA menjalankan pembersihan deterministik terlebih dahulu (huruf besar-kecil, spasi, format telepon, nilai referensi kanonik, tanggal), lalu menandai setiap sel yang ditolak dan memberikan vonis untuk setiap baris: valid, peringatan, atau tidak valid.\n\nHasil. Dari 5.000 catatan, 3.851 diterima dan 413 diterima dengan peringatan; 736 ditolak dengan alasan yang tepat. Mesin menangkap 1.263 pelanggaran sebelum masuk laporan dan memperbaiki 5.256 sel secara otomatis. Kepatuhan bukan lagi sekadar pendapat: menjadi angka 77,02 persen yang didukung laporan kesalahan, ekspor terbagi, dan log audit.",
+    impact_value: "1,263",
+    impact_label_en: "violations caught before reporting",
+    impact_label_id: "pelanggaran tertangkap sebelum pelaporan",
+    tags: ["Excel VBA", "Data Validation", "Rule Engine", "Audit Trail"],
+    cover_url: null,
+    file_url: null,
+    sort_order: 4,
+    published: true,
+  },
 ];
+
+/**
+ * Merge Supabase rows over the built-in defaults (matched by slug).
+ * CMS content wins for the same slug; code-only entries always stay visible.
+ */
+export function mergeProjects(
+  defaults: ProjectRecord[],
+  rows: ProjectRecord[],
+): ProjectRecord[] {
+  if (!rows.length) return defaults;
+  const bySlug = new Map<string, ProjectRecord>();
+  for (const item of defaults) bySlug.set(item.slug, item);
+  for (const row of rows) bySlug.set(row.slug, row);
+  return [...bySlug.values()].sort(
+    (a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0),
+  );
+}
 
 export const defaultCertifications: CertificationRecord[] = [
   {
