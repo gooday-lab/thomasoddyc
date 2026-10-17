@@ -6,12 +6,14 @@ import { ArrowUpRight } from "lucide-react";
 import { useSite } from "./site-context";
 import { MultiLine, SectionLabel, SiteShell } from "./site-chrome";
 import { defaultProjects, fetchProjects, mergeProjects, type ProjectRecord } from "@/lib/content";
+import { supabase } from "@/lib/supabase";
 
 const listPath = (project: ProjectRecord) =>
   /case\s*stud/i.test(project.type ?? "") ? "/case-studies" : "/projects";
 
 export default function ProjectDetailView({ slug }: { slug: string }) {
   const { t, pick } = useSite();
+  const [canEdit, setCanEdit] = useState(false);
   // Defaults render instantly; Supabase content replaces them once loaded.
   const [project, setProject] = useState<ProjectRecord | null>(
     () => defaultProjects.find((item) => item.slug === slug) ?? null,
@@ -34,6 +36,16 @@ export default function ProjectDetailView({ slug }: { slug: string }) {
       cancelled = true;
     };
   }, [slug]);
+
+  useEffect(() => {
+    let cancelled = false;
+    void supabase?.auth.getSession().then(({ data }) => {
+      if (!cancelled) setCanEdit(Boolean(data.session));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   if (loading) {
     return (
@@ -88,6 +100,9 @@ export default function ProjectDetailView({ slug }: { slug: string }) {
               </div>
             )}
             <div className="detail-actions">
+              {canEdit && (
+                <Link href={`/admin?edit=${project.slug}`} className="text-link">Edit this post</Link>
+              )}
               {project.file_url && (
                 <a href={project.file_url} download className="button button-dark">Download project file <ArrowUpRight size={16} /></a>
               )}

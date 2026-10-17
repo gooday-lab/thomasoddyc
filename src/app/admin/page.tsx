@@ -60,6 +60,7 @@ const emptyProjectForm = {
   impactLabelId: "",
   tags: "",
   fileUrl: "",
+  coverUrl: "",
 };
 
 const emptyExperienceForm = {
@@ -192,6 +193,15 @@ export default function AdminPage() {
         setProfileBioId(data.bio_id ?? "");
         setProfilePhotoUrl(data.profile_photo_url ?? "");
         setCvUrl(data.cv_url ?? "");
+      }
+
+      // deep link: /admin?edit=<slug> opens the editor for that post
+      const editSlug = new URLSearchParams(window.location.search).get("edit");
+      if (editSlug) {
+        const pool = projectRows.length ? projectRows : defaultProjects;
+        const target = pool.find((item) => item.slug === editSlug);
+        setActive("Projects");
+        if (target) openProjectForm(target);
       }
     };
     void loadAll();
@@ -337,6 +347,7 @@ export default function AdminPage() {
       impactLabelId: project.impact_label_id ?? "",
       tags: project.tags.join(", "),
       fileUrl: project.file_url ?? "",
+      coverUrl: project.cover_url ?? "",
     });
   };
 
@@ -344,8 +355,10 @@ export default function AdminPage() {
     event.preventDefault();
     const titleEn = projectForm.titleEn.trim();
     if (!titleEn) return;
+    const editingRow = projects.find((item) => item.id === editingProjectId);
     const payload = {
-      slug: slugify(titleEn),
+      // keep the original slug on edit so published URLs never break
+      slug: editingRow?.slug ?? slugify(titleEn),
       title_en: titleEn,
       title_id: projectForm.titleId.trim() || null,
       type: projectForm.projectType.trim() || null,
@@ -356,7 +369,8 @@ export default function AdminPage() {
       impact_label_id: projectForm.impactLabelId.trim() || null,
       tags: projectForm.tags.split(",").map((tag) => tag.trim()).filter(Boolean),
       file_url: projectForm.fileUrl.trim() || null,
-      sort_order: editingProjectId ? (projects.find((item) => item.id === editingProjectId)?.sort_order ?? projects.length + 1) : (projects.length ? Math.max(...projects.map((item) => item.sort_order)) + 1 : 1),
+      cover_url: projectForm.coverUrl.trim() || null,
+      sort_order: editingProjectId ? (editingRow?.sort_order ?? projects.length + 1) : (projects.length ? Math.max(...projects.map((item) => item.sort_order)) + 1 : 1),
       updated_at: new Date().toISOString(),
     };
 
@@ -725,6 +739,7 @@ export default function AdminPage() {
             <label className="full-field">Short description (ID)<textarea value={projectForm.bodyId} onChange={(event) => setProjectForm({ ...projectForm, bodyId: event.target.value })} placeholder="Masalah apa yang Anda selesaikan, dan bagaimana?" /></label>
             <label className="full-field">Tools / tags<input value={projectForm.tags} onChange={(event) => setProjectForm({ ...projectForm, tags: event.target.value })} placeholder="Excel VBA, Reconciliation, Data validation" /></label>
             <label className="full-field">Downloadable project file<input type="file" accept=".xlsx,.xls,.pdf,.docx,.csv,.zip" onChange={(event) => { const file = event.target.files?.[0]; if (file) void uploadToLibrary(file).then((url) => { if (url) setProjectForm((current) => ({ ...current, fileUrl: url })); }); }} />{projectForm.fileUrl && <small><a href={projectForm.fileUrl} target="_blank" rel="noreferrer">View current file ↘</a></small>}<small className="field-hint">Visitors get a download link on the project page. Max 10MB.</small></label>
+            <label className="full-field">Cover image<input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" onChange={(event) => { const file = event.target.files?.[0]; if (file) void uploadToLibrary(file).then((url) => { if (url) setProjectForm((current) => ({ ...current, coverUrl: url })); }); }} />{projectForm.coverUrl && <small><a href={projectForm.coverUrl} target="_blank" rel="noreferrer">View current cover ↗</a></small>}<small className="field-hint">Shown as the hero image on the project / case study page. Use a wide image (1600x900 works well).</small></label>
             <div className="form-actions full-field"><button type="button" className="admin-outline" onClick={() => { setShowProjectForm(false); setEditingProjectId(null); setProjectForm(emptyProjectForm); }}>Cancel</button><button type="submit" className="admin-primary small">{editingProjectId ? "Save changes" : "Save as draft"} <span>→</span></button></div>
           </form> : projects.length === 0 && <div className="empty-admin"><FolderKanban size={30} /><h3>Your projects live here.</h3><p>Add a project with its English and Indonesian story, impact metrics, tools, and images.</p><button className="admin-primary" onClick={() => openProjectForm()}>Create first project <span>→</span></button></div>}
         </div>}
