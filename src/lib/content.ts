@@ -169,6 +169,44 @@ export const defaultProjects: ProjectRecord[] = [
     sort_order: 4,
     published: true,
   },
+  {
+    id: "default-project-5",
+    slug: "powerbi-sales-dashboard",
+    title_en: "Sales performance dashboard in Power BI.",
+    title_id: "Dashboard kinerja penjualan di Power BI.",
+    type: "Portfolio Project",
+    body_en:
+      "Portfolio project - all data is fictional and simulated.\n\nA sales performance dashboard built in Power BI: one semantic model, nine DAX measures and a single-page report covering sales, profit, margin and the monthly trend, with region and category breakdowns.\n\nIt is saved as a PBIP (Power BI Project), so the model and the report are plain text and can live in Git. Download the project files and open SalesDashboard.pbip in Power BI Desktop.",
+    body_id:
+      "Proyek portofolio - seluruh data bersifat fiktif dan simulasi.\n\nDashboard kinerja penjualan yang dibangun di Power BI: satu semantic model, sembilan measure DAX, dan satu halaman laporan yang mencakup penjualan, profit, margin, serta tren bulanan, lengkap dengan rincian per region dan kategori.\n\nProject disimpan sebagai PBIP (Power BI Project), sehingga model dan laporannya berupa teks biasa dan bisa disimpan di Git. Unduh file project lalu buka SalesDashboard.pbip di Power BI Desktop.",
+    impact_value: "9",
+    impact_label_en: "DAX measures in one shared model",
+    impact_label_id: "measure DAX dalam satu model bersama",
+    tags: ["Power BI", "DAX", "Data Modelling", "Power Query", "Dashboard"],
+    cover_url: "/portfolio/powerbi-sales-cover.svg",
+    file_url: "/downloads/powerbi-sales-dashboard.zip",
+    sort_order: 5,
+    published: true,
+  },
+  {
+    id: "default-project-6",
+    slug: "sales-performance-power-bi-case-study",
+    title_en: "One sales model, nine measures, one source of truth.",
+    title_id: "Satu model penjualan, sembilan measure, satu sumber kebenaran.",
+    type: "Case study",
+    body_en:
+      "Portfolio case study - all data is fictional and simulated.\n\nPROBLEM\nSales reporting usually lives in scattered spreadsheets. Each region sends its own file, totals are rebuilt by hand, and management asks the same questions every month: how are we doing, which region is slipping, and which product line makes the margin.\n\nAPPROACH\nI modelled the data as a proper semantic model in Power BI instead of one large sheet. A Sales fact table (5,000 transactions, January 2023 to December 2024) is linked to a generated Calendar table, so every time-based question uses the same date logic. Business definitions live in nine DAX measures: sales, cost of goods, profit, margin, transaction count, average per transaction, same period last year, and year-over-year growth. The visuals do not recalculate anything themselves.\n\nTHE DASHBOARD\nOne page, readable in ten seconds: four KPI cards (sales, profit, margin, transactions), a year slicer, a monthly sales trend, and two column charts - sales by region and profit by product category.\n\nTHE PROJECT FILES\nThe data source path is set once in a parameter, so the same model can point at a real export. The project is saved as PBIP, a text-based format that works with Git, and includes a Node script that regenerates the sample data.\n\nWHAT IT SHOWS\nThe point is not the charts. Every number on the page comes from one definition, and changing a definition means changing one measure.",
+    body_id:
+      "Studi kasus portofolio - seluruh data bersifat fiktif dan simulasi.\n\nMASALAH\nLaporan penjualan biasanya tersebar di banyak spreadsheet. Setiap region mengirim file sendiri, total dihitung ulang secara manual, dan manajemen menanyakan pertanyaan yang sama setiap bulan: bagaimana kinerjanya, region mana yang turun, dan lini produk mana yang menghasilkan margin.\n\nPENDEKATAN\nSaya memodelkan data sebagai semantic model yang layak di Power BI, bukan satu sheet besar. Tabel fakta Sales (5.000 transaksi, Januari 2023 sampai Desember 2024) terhubung ke tabel Calendar yang dibuat otomatis, sehingga setiap pertanyaan berbasis waktu memakai logika tanggal yang sama. Definisi bisnis disimpan dalam sembilan measure DAX: penjualan, HPP, profit, margin, jumlah transaksi, rata-rata per transaksi, pembanding periode tahun lalu, dan pertumbuhan year-over-year. Visual tidak menghitung ulang apa pun sendiri.\n\nDASHBOARD\nSatu halaman yang bisa dibaca dalam sepuluh detik: empat kartu KPI (penjualan, profit, margin, transaksi), slicer tahun, tren penjualan bulanan, dan dua grafik kolom - penjualan per region dan profit per kategori produk.\n\nFILE PROJECT\nLokasi sumber data diatur sekali lewat parameter, sehingga model yang sama dapat diarahkan ke ekspor data asli. Project disimpan sebagai PBIP, format teks yang kompatibel dengan Git, dan disertai script Node yang membuat ulang data contoh.\n\nYANG DITUNJUKKAN\nPoinnya bukan grafiknya. Setiap angka di halaman berasal dari satu definisi, dan mengubah definisi cukup dengan mengubah satu measure.",
+    impact_value: "5,000",
+    impact_label_en: "transactions modelled from one fact table",
+    impact_label_id: "transaksi dimodelkan dari satu tabel fakta",
+    tags: ["Power BI", "DAX", "Star Schema", "Data Modelling", "Dashboard Design"],
+    cover_url: "/portfolio/powerbi-sales-cover.svg",
+    file_url: "/downloads/powerbi-sales-dashboard.zip",
+    sort_order: 6,
+    published: true,
+  },
 ];
 
 /**
