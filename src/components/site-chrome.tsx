@@ -7,6 +7,7 @@ import { Menu, X } from "lucide-react";
 import { useSite } from "./site-context";
 
 const navLinks = [
+  { href: "/", key: "navHome" },
   { href: "/about", key: "navAbout" },
   { href: "/experience", key: "navExperience" },
   { href: "/case-studies", key: "navCaseStudies" },

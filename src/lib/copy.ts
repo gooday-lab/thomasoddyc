@@ -9,6 +9,7 @@ export type Language = "en" | "id";
 
 export const copy = {
   en: {
+    navHome: "Home",
     navAbout: "About",
     navExperience: "Experience",
     navCaseStudies: "Case studies",
@@ -59,6 +60,7 @@ export const copy = {
     copyright: "© 2026 Thomas Oddy Chrisdwianto",
   },
   id: {
+    navHome: "Beranda",
     navAbout: "Tentang",
     navExperience: "Pengalaman",
     navCaseStudies: "Studi kasus",
@@ -119,6 +121,7 @@ export const copyGroups: { group: string; items: { key: CopyKey; label: string }
   {
     group: "Navigation menu",
     items: [
+      { key: "navHome", label: "Menu: Home" },
       { key: "navAbout", label: "Menu: About" },
       { key: "navExperience", label: "Menu: Experience" },
       { key: "navCaseStudies", label: "Menu: Case studies" },
