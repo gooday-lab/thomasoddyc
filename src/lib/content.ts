@@ -85,9 +85,9 @@ export const defaultProfile: ProfileRecord = {
   email: "thomasoddyc@gmail.com",
   linkedin_url: "https://linkedin.com/in/thomasoddyc",
   bio_en:
-    "I turn manual reporting workflows into reliable, efficient systems that help teams move with confidence.",
+    "Most of my work starts the same way: a report that eats hours every week. I turn it into something that runs itself.",
   bio_id:
-    "Saya mengubah alur kerja reporting yang manual menjadi sistem yang andal dan efisien agar tim dapat bergerak dengan percaya diri.",
+    "Sebagian besar pekerjaan saya selalu mulai dari hal yang sama: laporan yang memakan waktu berjam-jam setiap minggu. Saya ubah menjadi sistem yang bisa berjalan sendiri.",
   profile_photo_url: null,
   cv_url: "/Thomas_Oddy_ATS_CV.docx",
 };
@@ -291,9 +291,9 @@ export const defaultTestimonials: TestimonialRecord[] = [
   {
     id: "default-testimonial-1",
     quote_en:
-      "Thomas brings a rare combination of patience, precision, and practical thinking. He makes difficult reporting processes feel manageable.",
+      "Thomas is patient and careful with details. He turned reporting processes we used to dread into something routine.",
     quote_id:
-      "Thomas memiliki kombinasi langka antara kesabaran, ketelitian, dan cara berpikir praktis. Ia membuat proses reporting yang sulit terasa mudah dikelola.",
+      "Thomas sabar dan teliti dengan detail. Ia mengubah proses reporting yang dulu kita takuti menjadi hal yang rutin.",
     author_name: "Associate colleague",
     author_role: "Banking operations",
     avatar_url: null,

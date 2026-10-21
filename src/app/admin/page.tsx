@@ -251,7 +251,7 @@ export default function AdminPage() {
       setMessage(error.message);
       return;
     }
-    setMessage("Site copy saved — the public site now uses these greetings.");
+    setMessage("Site copy saved. The public site now uses these greetings.");
   };
 
   const saveHeroDesign = async (event: React.FormEvent) => {
@@ -314,7 +314,7 @@ export default function AdminPage() {
     allowLeaveRef.current = false;
     if (!supabase) {
       setLoggedIn(true);
-      setMessage("Demo mode active — connect Supabase to enable secure authentication.");
+      setMessage("Demo mode active. Connect Supabase to enable secure authentication.");
       return;
     }
     const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -687,7 +687,7 @@ export default function AdminPage() {
             {loginError && <div className="admin-error">{loginError}</div>}
             <button className="admin-primary" type="submit">Sign in <span>→</span></button>
           </form>
-          <div className="admin-demo-note"><span className="status-dot" /> {isSupabaseConfigured ? "Supabase authentication connected" : "Preview mode — Supabase not configured yet"}</div>
+          <div className="admin-demo-note"><span className="status-dot" /> {isSupabaseConfigured ? "Supabase authentication connected" : "Preview mode. Supabase not configured yet"}</div>
         </div>
       </main>
     );
@@ -747,10 +747,10 @@ export default function AdminPage() {
         {active === "Experience" && <div className="admin-panel"><div className="panel-heading"><div><span className="admin-kicker">Career history</span><h3>Work experience</h3></div><button className="admin-primary small" onClick={() => openExperienceForm()}><Plus size={15} /> Add experience</button></div>
           {experienceItems.map((item) => <div className="admin-project-row" key={item.id}><span className="project-icon"><Briefcase size={16} /></span><div><strong>{item.role}</strong><span>{item.company} · {item.years}</span></div><span className={item.published ? "published-pill" : "draft-pill"}>{item.published ? "Published" : "Draft"}</span><div className="row-actions"><button className="row-action" onClick={() => void reorderItems(experienceItems, setExperienceItems, "experience", experienceItems.indexOf(item), -1)} title="Move up" aria-label="Move experience up"><ArrowUp size={12} /></button><button className="row-action" onClick={() => void reorderItems(experienceItems, setExperienceItems, "experience", experienceItems.indexOf(item), 1)} title="Move down" aria-label="Move experience down"><ArrowDown size={12} /></button><button className="row-action" onClick={() => openExperienceForm(item)}><Pencil size={12} /> Edit</button><button className="row-action" onClick={() => void toggleExperiencePublished(item)}>{item.published ? "Unpublish" : "Publish"}</button><button className="row-action danger" onClick={() => void deleteExperience(item)}><Trash2 size={12} /> Delete</button></div></div>)}
           {showExperienceForm ? <form className="project-form" onSubmit={saveExperience}>
-            <p className="field-hint full-field">Press Enter for a line break — in single-line fields, type \n instead.</p>
+            <p className="field-hint full-field">Press Enter for a line break. In single-line fields, type \n instead.</p>
             <label>Role<input value={experienceForm.role} onChange={(event) => setExperienceForm({ ...experienceForm, role: event.target.value })} placeholder="e.g. Credit Reporting" required /></label>
             <label>Company<input value={experienceForm.company} onChange={(event) => setExperienceForm({ ...experienceForm, company: event.target.value })} placeholder="e.g. PT. Bank Maspion Indonesia Tbk" required /></label>
-            <label>Period<input value={experienceForm.years} onChange={(event) => setExperienceForm({ ...experienceForm, years: event.target.value })} placeholder="e.g. Mar 2022 — Aug 2026" /></label>
+            <label>Period<input value={experienceForm.years} onChange={(event) => setExperienceForm({ ...experienceForm, years: event.target.value })} placeholder="e.g. Mar 2022 – Aug 2026" /></label>
             <label className="full-field">Description (EN)<textarea value={experienceForm.bodyEn} onChange={(event) => setExperienceForm({ ...experienceForm, bodyEn: event.target.value })} placeholder="What did you do in this role?" /></label>
             <label className="full-field">Description (ID)<textarea value={experienceForm.bodyId} onChange={(event) => setExperienceForm({ ...experienceForm, bodyId: event.target.value })} placeholder="Apa yang Anda lakukan di peran ini?" /></label>
             <label>Result (EN)<textarea rows={2} value={experienceForm.resultEn} onChange={(event) => setExperienceForm({ ...experienceForm, resultEn: event.target.value })} placeholder="e.g. Reporting time reduced from 8 hours to 2 hours." /></label>
@@ -782,7 +782,7 @@ export default function AdminPage() {
         </div>}
 
         {active === "Site copy" && <form className="admin-panel" onSubmit={saveSiteCopy}><div className="panel-heading"><div><span className="admin-kicker">Greetings & labels</span><h3>Site copy</h3></div><button className="admin-primary small" type="submit">Save all changes</button></div>
-          <p className="field-hint">Every greeting, heading, and label on the public pages. English (EN) and Indonesian (ID) are stored separately — the site shows the one matching the visitor&apos;s language toggle. Use \n (or press Enter in the body fields) for a line break.</p>
+          <p className="field-hint">Every greeting, heading, and label on the public pages. English (EN) and Indonesian (ID) are stored separately. The site shows the one matching the visitor&apos;s language toggle. Use \n (or press Enter in the body fields) for a line break.</p>
           {copyGroups.map((group) => <div className="copy-group" key={group.group}><h3>{group.group}</h3>{group.items.map((item) => { const isBody = item.key.endsWith("Body"); return <label className="copy-field" key={item.key}>{item.label}<div className={`copy-pair${isBody ? " copy-pair-body" : ""}`}>{isBody ? <><textarea rows={6} value={copyEdits[item.key].en} onChange={(event) => setCopyEdits({ ...copyEdits, [item.key]: { ...copyEdits[item.key], en: event.target.value } })} placeholder="English" /><textarea rows={6} value={copyEdits[item.key].id} onChange={(event) => setCopyEdits({ ...copyEdits, [item.key]: { ...copyEdits[item.key], id: event.target.value } })} placeholder="Indonesia" /></> : <><input value={copyEdits[item.key].en} onChange={(event) => setCopyEdits({ ...copyEdits, [item.key]: { ...copyEdits[item.key], en: event.target.value } })} placeholder="English" /><input value={copyEdits[item.key].id} onChange={(event) => setCopyEdits({ ...copyEdits, [item.key]: { ...copyEdits[item.key], id: event.target.value } })} placeholder="Indonesia" /></>}</div></label>; })}</div>)}
         </form>}
 

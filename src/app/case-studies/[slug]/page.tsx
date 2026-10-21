@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import ProjectDetailView from "@/components/project-detail-view";
 
 export const metadata: Metadata = {
-  title: "Case study — Thomas Oddy Chrisdwianto",
+  title: "Case study | Thomas Oddy Chrisdwianto",
   description: "An automation case study by Thomas Oddy Chrisdwianto.",
 };
 

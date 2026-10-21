@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import ProjectDetailView from "@/components/project-detail-view";
 
 export const metadata: Metadata = {
-  title: "Project — Thomas Oddy Chrisdwianto",
+  title: "Project | Thomas Oddy Chrisdwianto",
   description: "A selected project by Thomas Oddy Chrisdwianto.",
 };
 

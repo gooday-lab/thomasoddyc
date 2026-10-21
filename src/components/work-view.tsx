@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ArrowUpRight, MoveUpRight } from "lucide-react";
 import { useSite } from "./site-context";
-import { MultiLine, SectionLabel, SiteShell } from "./site-chrome";
+import { MultiLine, SiteShell } from "./site-chrome";
 import { defaultProjects, fetchProjects, mergeProjects, type ProjectRecord } from "@/lib/content";
 
 const isCaseStudy = (project: ProjectRecord) => /case\s*stud/i.test(project.type ?? "");
@@ -30,8 +30,7 @@ export default function WorkView({ variant }: { variant: "case-studies" | "proje
   return (
     <SiteShell>
       <section className="work section-pad">
-        <div className="section-intro two-column">
-          <div><SectionLabel>{t.workLabel}</SectionLabel></div>
+        <div className="section-intro">
           <div><h2><MultiLine text={t.workTitle} /></h2><p>{t.workBody}</p></div>
         </div>
         {visible.length === 0 ? (
