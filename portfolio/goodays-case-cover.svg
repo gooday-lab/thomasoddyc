@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#164a3a"/>
+  <circle cx="1080" cy="120" r="210" fill="none" stroke="#ff6b35" stroke-opacity="0.35" stroke-width="2"/>
+  <circle cx="1080" cy="120" r="150" fill="none" stroke="#ff6b35" stroke-opacity="0.5" stroke-width="2"/>
+  <g font-family="Segoe UI, Arial, sans-serif">
+    <text x="70" y="120" font-size="22" fill="#ff6b35" font-weight="700" letter-spacing="3">CASE STUDY · AFFILIATE CURATION</text>
+    <text x="70" y="235" font-size="72" fill="#f7f3ea" font-weight="700">Affiliate yang</text>
+    <text x="70" y="315" font-size="72" fill="#f7f3ea" font-weight="700">bisa dipercaya.</text>
+    <text x="70" y="385" font-family="Georgia, serif" font-style="italic" font-size="40" fill="#ff6b35">Rating dan harga hanya jika bisa dicek.</text>
+    <text x="70" y="440" font-size="22" fill="#bdd2c8">Membangun GoOdays: rekomendasi produk, deals, dan tracking per penempatan.</text>
+  </g>
+  <g font-family="Segoe UI, Arial, sans-serif">
+    <rect x="70" y="520" width="330" height="170" rx="20" fill="#1d5544"/>
+    <text x="100" y="590" font-size="64" fill="#ff6b35" font-weight="700">0</text>
+    <text x="100" y="640" font-size="19" fill="#f7f3ea">rating atau harga</text>
+    <text x="100" y="664" font-size="19" fill="#f7f3ea">yang dikarang</text>
+    <rect x="425" y="520" width="330" height="170" rx="20" fill="#1d5544"/>
+    <text x="455" y="590" font-size="64" fill="#f7f3ea" font-weight="700">10</text>
+    <text x="455" y="640" font-size="19" fill="#f7f3ea">halaman publik</text>
+    <text x="455" y="664" font-size="19" fill="#f7f3ea">tanpa build step</text>
+    <rect x="780" y="520" width="350" height="170" rx="20" fill="#1d5544"/>
+    <text x="810" y="590" font-size="46" fill="#f7f3ea" font-weight="700">SubID</text>
+    <text x="810" y="640" font-size="19" fill="#f7f3ea">per penempatan tombol</text>
+    <text x="810" y="664" font-size="19" fill="#f7f3ea">beli di Shopee</text>
+    <text x="70" y="750" font-size="20" fill="#bdd2c8">goodays.pages.dev</text>
+  </g>
+</svg>
