@@ -91,17 +91,21 @@ export default function HomeView() {
       </section>
 
       <section className="testimonial section-pad">
-        <SectionLabel>{t.testimonialLabel}</SectionLabel>
-        {testimonials.map((item) => (
-          <div className="testimonial-content" key={item.id}>
-            <Quote size={38} />
-            <blockquote>“{pick(item.quote_en, item.quote_id)}”</blockquote>
-            <div className="testimonial-person">
-              <span className="avatar-placeholder">{initials(item.author_name)}</span>
-              <div><strong>{item.author_name ?? ""}</strong><span>{item.author_role ?? ""}</span></div>
-            </div>
+        <div className="two-column">
+          <div><SectionLabel>{t.testimonialLabel}</SectionLabel></div>
+          <div>
+            {testimonials.map((item) => (
+              <div className="testimonial-content" key={item.id}>
+                <Quote size={38} />
+                <blockquote>“{pick(item.quote_en, item.quote_id)}”</blockquote>
+                <div className="testimonial-person">
+                  <span className="avatar-placeholder">{initials(item.author_name)}</span>
+                  <div><strong>{item.author_name ?? ""}</strong><span>{item.author_role ?? ""}</span></div>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
       </section>
     </SiteShell>
   );
