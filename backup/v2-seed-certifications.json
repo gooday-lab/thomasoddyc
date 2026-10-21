@@ -1,0 +1,22 @@
+[
+ {
+  "id": "default-cert-1",
+  "name_en": "Data & Reporting Practice",
+  "name_id": "Praktik Data & Reporting",
+  "issuer": "Professional development",
+  "year": "Ongoing",
+  "file_url": null,
+  "sort_order": 1,
+  "published": true
+ },
+ {
+  "id": "default-cert-2",
+  "name_en": "Excel Automation & VBA",
+  "name_id": "Otomasi Excel & VBA",
+  "issuer": "Applied workflow development",
+  "year": "Core skill",
+  "file_url": null,
+  "sort_order": 2,
+  "published": true
+ }
+]
