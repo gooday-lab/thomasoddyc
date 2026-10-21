@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#f7f3ea"/>
+  <circle cx="1130" cy="760" r="260" fill="#e9dfd0"/>
+  <g font-family="Segoe UI, Arial, sans-serif">
+    <text x="70" y="120" font-size="22" fill="#ff6b35" font-weight="700" letter-spacing="3">GOODAYS · LIVE PROJECT</text>
+    <text x="70" y="225" font-size="62" fill="#164a3a" font-weight="700">Rekomendasi produk</text>
+    <text x="70" y="295" font-size="62" fill="#164a3a" font-weight="700">yang jujur,</text>
+    <text x="70" y="365" font-family="Georgia, serif" font-style="italic" font-size="62" fill="#ff6b35">setiap klik terlacak.</text>
+    <text x="70" y="430" font-size="24" fill="#69716b">Top picks, deals, dan panduan belanja untuk pembeli Indonesia.</text>
+    <rect x="70" y="470" width="170" height="54" rx="27" fill="#164a3a"/>
+    <text x="155" y="504" font-size="20" fill="#ffffff" font-weight="700" text-anchor="middle">Top Picks</text>
+    <rect x="256" y="470" width="130" height="54" rx="27" fill="#164a3a"/>
+    <text x="321" y="504" font-size="20" fill="#ffffff" font-weight="700" text-anchor="middle">Deals</text>
+    <rect x="402" y="470" width="190" height="54" rx="27" fill="#164a3a"/>
+    <text x="497" y="504" font-size="20" fill="#ffffff" font-weight="700" text-anchor="middle">Artikel SEO</text>
+    <text x="70" y="720" font-size="20" fill="#69716b">goodays.pages.dev</text>
+  </g>
+  <rect x="760" y="130" width="370" height="470" rx="24" fill="#ffffff" stroke="#d9ded7"/>
+  <g font-family="Segoe UI, Arial, sans-serif">
+    <text x="790" y="178" font-size="18" fill="#164a3a" font-weight="700">Pilihan Terbaik Bulan Ini</text>
+    <rect x="790" y="200" width="320" height="110" rx="16" fill="#f7f3ea"/>
+    <text x="810" y="228" font-size="12" fill="#ff6b35" font-weight="700" letter-spacing="2">PILIHAN UTAMA</text>
+    <text x="810" y="258" font-size="20" fill="#164a3a" font-weight="700">Osmo Pocket 3</text>
+    <text x="810" y="284" font-size="15" fill="#69716b">Gimbal kamera saku 4K untuk vlog</text>
+    <circle cx="1080" cy="255" r="20" fill="#ff6b35"/>
+    <text x="1080" y="262" font-size="20" fill="#ffffff" text-anchor="middle" font-weight="700">→</text>
+    <rect x="790" y="330" width="320" height="110" rx="16" fill="#f7f3ea"/>
+    <text x="810" y="358" font-size="12" fill="#ff6b35" font-weight="700" letter-spacing="2">AKSESORIS SHOOTING</text>
+    <text x="810" y="388" font-size="20" fill="#164a3a" font-weight="700">Kipas Tangan 2500 mAh</text>
+    <text x="810" y="414" font-size="15" fill="#69716b">Teman shooting outdoor</text>
+    <circle cx="1080" cy="385" r="20" fill="#164a3a"/>
+    <text x="1080" y="392" font-size="20" fill="#ffffff" text-anchor="middle" font-weight="700">→</text>
+    <rect x="790" y="460" width="320" height="110" rx="16" fill="#f7f3ea"/>
+    <text x="810" y="488" font-size="12" fill="#ff6b35" font-weight="700" letter-spacing="2">TWS HEMAT</text>
+    <text x="810" y="518" font-size="20" fill="#164a3a" font-weight="700">ACEFAST T8</text>
+    <text x="810" y="544" font-size="15" fill="#69716b">TWS mini dengan ENC</text>
+    <circle cx="1080" cy="515" r="20" fill="#164a3a"/>
+    <text x="1080" y="522" font-size="20" fill="#ffffff" text-anchor="middle" font-weight="700">→</text>
+    <text x="790" y="590" font-size="14" fill="#69716b">Rating &amp; harga hanya tampil jika terverifikasi</text>
+  </g>
+  <circle cx="1120" cy="110" r="46" fill="#ff6b35"/>
+  <text x="1120" y="128" font-family="Georgia, serif" font-size="54" fill="#ffffff" text-anchor="middle" font-weight="700">G</text>
+</svg>

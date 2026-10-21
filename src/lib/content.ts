@@ -207,6 +207,44 @@ export const defaultProjects: ProjectRecord[] = [
     sort_order: 6,
     published: true,
   },
+  {
+    id: "default-project-7",
+    slug: "goodays-curated-product-picks",
+    title_en: "GoOdays: curated product picks with honest reviews.",
+    title_id: "GoOdays: rekomendasi produk terkurasi dengan review jujur.",
+    type: "Live Project",
+    body_en:
+      "Live project - a real site with real products.\n\nGoOdays is an Indonesian product curation site: top picks, reviews with pros and cons, weekly deals and buying guides. Every buy button is a Shopee Affiliate link tagged with its own SubID per placement, so the affiliate report shows which button actually works.\n\nPrices and ratings are only shown when they can be verified. No invented numbers.\n\nVisit: https://goodays.pages.dev",
+    body_id:
+      "Proyek live - situs sungguhan dengan produk sungguhan.\n\nGoOdays adalah situs kurasi produk berbahasa Indonesia: top picks, review dengan kelebihan dan kekurangan, deals mingguan, dan panduan belanja. Setiap tombol beli memakai link Shopee Affiliate dengan SubID sendiri per penempatan, sehingga laporan afiliasi menunjukkan tombol mana yang benar-benar bekerja.\n\nHarga dan rating hanya ditampilkan jika bisa diverifikasi. Tanpa angka yang dikarang.\n\nKunjungi: https://goodays.pages.dev",
+    impact_value: "10",
+    impact_label_en: "pages in the sitemap, no build step",
+    impact_label_id: "halaman di sitemap, tanpa build step",
+    tags: ["Affiliate Marketing", "Shopee Affiliate", "Vanilla JS", "Supabase", "SEO", "Bilingual ID/EN"],
+    cover_url: "/portfolio/goodays-cover.svg",
+    file_url: null,
+    sort_order: 7,
+    published: true,
+  },
+  {
+    id: "default-project-8",
+    slug: "goodays-affiliate-curation-case-study",
+    title_en: "Affiliate picks people can trust: the GoOdays case study.",
+    title_id: "Rekomendasi affiliate yang bisa dipercaya: studi kasus GoOdays.",
+    type: "Case study",
+    body_en:
+      "Live case study - a real site with real products.\n\nPROBLEM\nIndonesian shoppers are flooded with best-product lists that are sponsored in disguise. Affiliate sites that show fake ratings and fake discounts lose trust, and trust is what makes a click turn into a purchase.\n\nAPPROACH\nI built GoOdays around one rule: say less, but only what can be verified. A top pick carries a rating only when it comes from real research. A deal card shows a price only after someone has checked it on Shopee, and it disappears on its own after its valid-until date. Every buy button is a Shopee Affiliate link with a SubID per placement, so the report shows where the clicks come from, not just how many there are.\n\nTHE BUILD\nVanilla HTML, CSS and JavaScript, with Supabase for editable content and an admin panel, deployed on Cloudflare Pages with no build step. Full Indonesian and English copy, a 10-point buy-wisely checklist as the newsletter lead magnet, SEO buying-guide articles, and an internal link builder that adds the SubID to any Shopee link.\n\nWHAT IT SHOWS\nMost affiliate sites compete on hype. GoOdays competes on being checkable: zero invented ratings or prices, and a tracking setup that tells you which placement earns.",
+    body_id:
+      "Studi kasus live - situs sungguhan dengan produk sungguhan.\n\nMASALAH\nPembeli Indonesia dibanjiri daftar produk terbaik yang sebenarnya berbayar terselubung. Situs affiliate yang menampilkan rating dan diskon palsu kehilangan kepercayaan, dan kepercayaanlah yang membuat klik berubah menjadi pembelian.\n\nPENDEKATAN\nSaya membangun GoOdays dengan satu aturan: tulis lebih sedikit, tetapi hanya yang bisa diverifikasi. Sebuah top pick hanya memuat rating jika berasal dari riset nyata. Kartu deal hanya menampilkan harga setelah seseorang mengeceknya di Shopee, dan kartu itu hilang otomatis setelah tanggal berlakunya habis. Setiap tombol beli memakai link Shopee Affiliate dengan SubID per penempatan, sehingga laporan menunjukkan dari mana klik berasal, bukan sekadar berapa jumlahnya.\n\nPEMBANGUNAN\nHTML, CSS, dan JavaScript murni, dengan Supabase untuk konten yang bisa diedit dan panel admin, di-deploy ke Cloudflare Pages tanpa build step. Copy lengkap dalam Bahasa Indonesia dan Inggris, checklist 10 poin \"beli dengan bijak\" sebagai lead magnet newsletter, artikel panduan belanja SEO, dan link builder internal yang menambahkan SubID ke link Shopee mana pun.\n\nYANG DITUNJUKKAN\nKebanyakan situs affiliate bersaing lewat hype. GoOdays bersaing lewat bisa dicek: nol rating atau harga yang dikarang, dan setup tracking yang memberi tahu penempatan mana yang menghasilkan.",
+    impact_value: "0",
+    impact_label_en: "invented ratings or prices, shown only when verified",
+    impact_label_id: "rating atau harga yang dikarang, hanya tampil jika terverifikasi",
+    tags: ["Affiliate Marketing", "Shopee Affiliate", "Conversion Design", "SEO Content", "Lead Magnet", "Click Tracking"],
+    cover_url: "/portfolio/goodays-case-cover.svg",
+    file_url: null,
+    sort_order: 8,
+    published: true,
+  },
 ];
 
 /**
