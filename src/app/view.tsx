@@ -57,12 +57,12 @@ export default function HomeView() {
             <div className="visual-orbit orbit-one" />
             <div className="visual-orbit orbit-two" />
             <div className="visual-core">
-              <span className="core-label">DATA → DECISIONS</span>
-              <span className="core-value">75<span>%</span></span>
-              <span className="core-caption">efficiency gain</span>
+              <span className="core-label">{t.heroCoreLabel}</span>
+              <span className="core-value">{t.heroCoreValue}<span>{t.heroCoreSuffix}</span></span>
+              <span className="core-caption">{t.heroCoreCaption}</span>
             </div>
-            <div className="visual-float float-top"><span className="float-line" /><span>50K+</span><small>records managed</small></div>
-            <div className="visual-float float-bottom"><BarChart3 size={17} /><span>Reporting<br /><b>optimized</b></span></div>
+            <div className="visual-float float-top"><span className="float-line" /><span>{t.heroFloatValue}</span><small>{t.heroFloatCaption}</small></div>
+            <div className="visual-float float-bottom"><BarChart3 size={17} /><span>{t.heroFloatLine1}<br /><b>{t.heroFloatLine2}</b></span></div>
             <div className="visual-grid" />
           </div>
         </div>
