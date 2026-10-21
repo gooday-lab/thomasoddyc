@@ -102,7 +102,9 @@ h2 { font-family: "Manrope", sans-serif; font-size: clamp(36px, 4.3vw, 63px); li
 .experience-item { display: grid; grid-template-columns: 50px 1fr 1.05fr; gap: 32px; border-top: 1px solid var(--line); padding: 32px 0; }
 .experience-item:last-child { border-bottom: 1px solid var(--line); }
 .experience-index, .experience-meta span, .result, .education-row > span, .cert-row > span { font-family: "DM Mono", monospace; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
-.experience-meta { display: flex; flex-direction: column; gap: 10px; line-height: 1.5; font-size: 11px; }
+.experience-meta span { font-size: 12px; }
+.experience-meta span:last-child { color: var(--ink); font-size: 13px; }
+.experience-meta { display: flex; flex-direction: column; gap: 10px; line-height: 1.5; }
 .experience-meta span:last-child { color: var(--ink); }
 .experience-detail h3, .education-row h3, .cert-row h3 { font-family: "Manrope", sans-serif; font-size: 20px; margin: 0 0 12px; letter-spacing: -.04em; }
 .experience-detail p { color: var(--muted); font-size: 16px; line-height: 1.7; margin: 0 0 18px; max-width: 580px; white-space: pre-line; }
