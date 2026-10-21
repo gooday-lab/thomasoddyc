@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Check } from "lucide-react";
 import { useSite } from "@/components/site-context";
-import { MultiLine, SiteShell } from "@/components/site-chrome";
+import { MultiLine, SectionLabel, SiteShell } from "@/components/site-chrome";
 import { defaultExperience, fetchExperience, type ExperienceRecord } from "@/lib/content";
 
 export default function ExperienceView() {
@@ -23,7 +23,8 @@ export default function ExperienceView() {
   return (
     <SiteShell>
       <section className="experience section-pad">
-        <div className="section-intro">
+        <div className="section-intro two-column">
+          <div><SectionLabel>{t.experienceLabel}</SectionLabel></div>
           <div><h2><MultiLine text={t.experienceTitle} /></h2><p>{t.experienceBody}</p></div>
         </div>
         <div className="experience-list">

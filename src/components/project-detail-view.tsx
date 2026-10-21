@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { useSite } from "./site-context";
-import { MultiLine, SiteShell } from "./site-chrome";
+import { MultiLine, SectionLabel, SiteShell } from "./site-chrome";
 import { defaultProjects, fetchProjects, mergeProjects, type ProjectRecord } from "@/lib/content";
 const listPath = (project: ProjectRecord) =>
   /case\s*stud/i.test(project.type ?? "") ? "/case-studies" : "/projects";
@@ -48,7 +48,8 @@ export default function ProjectDetailView({ slug }: { slug: string }) {
     return (
       <SiteShell>
         <section className="work section-pad">
-          <div className="section-intro">
+          <div className="section-intro two-column">
+            <div><SectionLabel>{t.workLabel}</SectionLabel></div>
             <div>
               <h2><MultiLine text={t.workTitle} /></h2>
               <p className="work-empty">This project could not be found. It may have been unpublished or removed.</p>
@@ -63,7 +64,8 @@ export default function ProjectDetailView({ slug }: { slug: string }) {
   return (
     <SiteShell>
       <section className="work section-pad">
-        <div className="section-intro">
+        <div className="section-intro two-column">
+          <div><SectionLabel>{(project.type ?? "Case study").toUpperCase()}</SectionLabel></div>
           <div>
             <h2><MultiLine text={pick(project.title_en, project.title_id)} /></h2>
             <p>{pick(project.body_en, project.body_id)}</p>

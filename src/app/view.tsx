@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState, type CSSProperties } from "react";
 import { ArrowUpRight, BarChart3, Download, Quote } from "lucide-react";
 import { useSite } from "@/components/site-context";
-import { MultiLine, SiteShell } from "@/components/site-chrome";
+import { MultiLine, SectionLabel, SiteShell } from "@/components/site-chrome";
 import { defaultTestimonials, fetchTestimonials, type TestimonialRecord } from "@/lib/content";
 import { impact } from "@/lib/cv";
 
@@ -70,15 +70,19 @@ export default function HomeView() {
       </section>
 
       <section className="statement section-pad" id="perspective">
-        <div className="statement-copy">
-          <h2>{t.statementTitle}</h2>
-          <p>{t.statementBody}</p>
-          <div className="signature">{profile.full_name} <span>Sidoarjo, Indonesia</span></div>
+        <div className="two-column">
+          <div><SectionLabel>{t.statementLabel}</SectionLabel></div>
+          <div className="statement-copy">
+            <h2>{t.statementTitle}</h2>
+            <p>{t.statementBody}</p>
+            <div className="signature">{profile.full_name} <span>Sidoarjo, Indonesia</span></div>
+          </div>
         </div>
       </section>
 
       <section className="impact section-pad">
-        <div className="section-intro">
+        <div className="section-intro two-column">
+          <div><SectionLabel>{t.impactLabel}</SectionLabel></div>
           <div><h2><MultiLine text={t.impactTitle} /></h2><p>{t.impactBody}</p></div>
         </div>
         <div className="impact-grid">
@@ -87,6 +91,7 @@ export default function HomeView() {
       </section>
 
       <section className="testimonial section-pad">
+        <SectionLabel>{t.testimonialLabel}</SectionLabel>
         {testimonials.map((item) => (
           <div className="testimonial-content" key={item.id}>
             <Quote size={38} />

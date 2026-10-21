@@ -2,7 +2,7 @@
 
 import { ExternalLink, Mail } from "lucide-react";
 import { useSite } from "@/components/site-context";
-import { MultiLine, SiteShell } from "@/components/site-chrome";
+import { MultiLine, SectionLabel, SiteShell } from "@/components/site-chrome";
 
 export default function ContactView() {
   const { t, profile } = useSite();
@@ -11,6 +11,7 @@ export default function ContactView() {
     <SiteShell>
       <section className="contact section-pad">
         <div className="contact-inner">
+          <SectionLabel>{t.contactLabel}</SectionLabel>
           <h2><MultiLine text={t.contactTitle} /></h2>
           <p>{t.contactBody}</p>
           <div className="contact-actions">
