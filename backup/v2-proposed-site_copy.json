@@ -1,5 +1,10 @@
 [
  {
+  "copy_key": "navHome",
+  "value_en": "Home",
+  "value_id": "Beranda"
+ },
+ {
   "copy_key": "navAbout",
   "value_en": "About",
   "value_id": "Tentang"
@@ -58,6 +63,46 @@
   "copy_key": "scroll",
   "value_en": "Scroll to explore",
   "value_id": "Gulir untuk menjelajah"
+ },
+ {
+  "copy_key": "heroCoreLabel",
+  "value_en": "DATA → DECISIONS",
+  "value_id": "DATA → KEPUTUSAN"
+ },
+ {
+  "copy_key": "heroCoreValue",
+  "value_en": "75",
+  "value_id": "75"
+ },
+ {
+  "copy_key": "heroCoreSuffix",
+  "value_en": "%",
+  "value_id": "%"
+ },
+ {
+  "copy_key": "heroCoreCaption",
+  "value_en": "Efficiency gain",
+  "value_id": "Efisiensi meningkat"
+ },
+ {
+  "copy_key": "heroFloatValue",
+  "value_en": "50K+",
+  "value_id": "50K+"
+ },
+ {
+  "copy_key": "heroFloatCaption",
+  "value_en": "Records managed",
+  "value_id": "Data dikelola"
+ },
+ {
+  "copy_key": "heroFloatLine1",
+  "value_en": "Reporting",
+  "value_id": "Reporting"
+ },
+ {
+  "copy_key": "heroFloatLine2",
+  "value_en": "Optimized",
+  "value_id": "Optimal"
  },
  {
   "copy_key": "statementLabel",
