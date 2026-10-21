@@ -130,13 +130,12 @@ h2 { font-family: "Manrope", sans-serif; font-size: clamp(36px, 4.3vw, 63px); li
 .project-link { display: flex; align-items: center; gap: 8px; margin-top: 24px; font-family: "DM Mono", monospace; font-size: 9px; text-transform: uppercase; color: var(--sage-deep); }
 .outline-link { margin-left: max(calc((100% - 1160px)/2), 0px); color: var(--ink); border-color: var(--ink); }
 .foundation { padding-top: 112px; padding-bottom: 112px; background: var(--white); }
-.foundation-grid > div:first-child h2 { margin-top: 40px; }
+.foundation-grid h2 { margin-top: 40px; }
 .foundation-right { max-width: 700px; }
 .education-row { display: grid; gap: 10px; padding: 0 0 24px; margin-bottom: 24px; border-bottom: 1px solid var(--line); }
 .education-row h3 { margin-bottom: 0; }
 .education-row p, .cert-row p { margin: 0; color: var(--muted); font-size: 13px; }
-.cert-heading { margin: 64px 0 32px; }
-.cert-heading h2 { margin-top: 16px; }
+.foundation-right .cert-row:first-of-type { padding-top: 0; }
 .cert-row { display: flex; align-items: center; gap: 16px; border-bottom: 1px solid var(--line); padding: 20px 0; }
 .cert-row h3 { margin: 0 0 4px; }
 .cert-row > div { flex: 1; }
@@ -174,7 +173,7 @@ blockquote { font-family: "Manrope", sans-serif; font-size: clamp(28px, 4vw, 52p
   .impact-card:nth-child(2) { border-right: 0; margin-right: 0; }
   .impact-card:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
   .skill-groups { grid-template-columns: 1fr; gap: 32px; }
-  .foundation-grid > div:first-child h2 { margin-top: 0; }
+  .foundation-grid h2 { margin-top: 0; }
 }
 @media (max-width: 640px) {
   .section-pad { padding-left: 22px; padding-right: 22px; }
@@ -211,7 +210,6 @@ blockquote { font-family: "Manrope", sans-serif; font-size: clamp(28px, 4vw, 52p
   .project-main { grid-template-columns: 1fr 88px; }
   .project-stat strong { font-size: 28px; }
   .education-row { gap: 10px; }
-  .cert-heading { margin-top: 56px; }
   blockquote { font-size: 35px; }
   .contact { padding-top: 72px; padding-bottom: 72px; }
   .contact h2 { margin-top: 40px; }
