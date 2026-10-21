@@ -140,7 +140,7 @@ h2 { font-family: "Manrope", sans-serif; font-size: clamp(36px, 4.3vw, 63px); li
 .cert-row h3 { margin: 0 0 4px; }
 .cert-row > div { flex: 1; }
 .testimonial { padding-top: 112px; padding-bottom: 112px; }
-.testimonial-content { max-width: 800px; margin: 0; }
+.testimonial-content { max-width: 800px; margin: 0 auto; }
 .testimonial-content + .testimonial-content { margin-top: 56px; }
 .testimonial-content > svg { color: var(--sage-deep); margin-bottom: 24px; }
 blockquote { font-family: "Manrope", sans-serif; font-size: clamp(28px, 4vw, 52px); line-height: 1.1; letter-spacing: -.07em; margin: 0 0 32px; }

@@ -54,8 +54,6 @@ export const copy = {
     educationTitle: "Where it\nall started.",
     certLabel: "Learning",
     certTitle: "Still collecting\ncertificates.",
-    testimonialLabel: "A good working relationship",
-    contactLabel: "Let's connect",
     contactTitle: "Have a complex\nprocess in mind?",
     contactBody:
       "If you need an MIS Analyst, or just want reporting that runs better, send me a message.",
@@ -113,8 +111,6 @@ export const copy = {
     educationTitle: "Dari mana\nsemuanya mulai.",
     certLabel: "Pembelajaran",
     certTitle: "Terus mengumpulkan\nsertifikat.",
-    testimonialLabel: "Kolaborasi yang baik",
-    contactLabel: "Mari terhubung",
     contactTitle: "Punya proses\nyang kompleks?",
     contactBody:
       "Kalau Anda butuh MIS Analyst, atau hanya ingin reporting yang berjalan lebih baik, kirim saya pesan.",
@@ -188,10 +184,6 @@ export const copyGroups: { group: string; items: { key: CopyKey; label: string }
     ],
   },
   {
-    group: "Home · testimonial",
-    items: [{ key: "testimonialLabel", label: "Section label" }],
-  },
-  {
     group: "About · toolkit",
     items: [
       { key: "skillsLabel", label: "Section label" },
@@ -234,7 +226,6 @@ export const copyGroups: { group: string; items: { key: CopyKey; label: string }
   {
     group: "Contact",
     items: [
-      { key: "contactLabel", label: "Section label" },
       { key: "contactTitle", label: "Section title" },
       { key: "contactBody", label: "Section body" },
       { key: "email", label: "Email button" },
