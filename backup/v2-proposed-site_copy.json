@@ -1,0 +1,212 @@
+[
+ {
+  "copy_key": "navAbout",
+  "value_en": "About",
+  "value_id": "Tentang"
+ },
+ {
+  "copy_key": "navExperience",
+  "value_en": "Experience",
+  "value_id": "Pengalaman"
+ },
+ {
+  "copy_key": "navCaseStudies",
+  "value_en": "Case studies",
+  "value_id": "Studi kasus"
+ },
+ {
+  "copy_key": "navProjects",
+  "value_en": "Projects",
+  "value_id": "Proyek"
+ },
+ {
+  "copy_key": "navContact",
+  "value_en": "Contact",
+  "value_id": "Kontak"
+ },
+ {
+  "copy_key": "eyebrow",
+  "value_en": "MIS Analyst · Data & Reporting",
+  "value_id": "MIS Analyst · Data & Reporting"
+ },
+ {
+  "copy_key": "heroTitle",
+  "value_en": "I make complex data\nwork clearly.",
+  "value_id": "Saya membuat data\nyang kompleks menjadi jelas."
+ },
+ {
+  "copy_key": "heroBody",
+  "value_en": "Most of my work starts the same way: a report that eats hours every week. I turn it into something that runs itself.",
+  "value_id": "Sebagian besar pekerjaan saya selalu mulai dari hal yang sama: laporan yang memakan waktu berjam-jam setiap minggu. Saya ubah menjadi sistem yang bisa berjalan sendiri."
+ },
+ {
+  "copy_key": "explore",
+  "value_en": "Explore my work",
+  "value_id": "Lihat karya saya"
+ },
+ {
+  "copy_key": "cv",
+  "value_en": "Download CV",
+  "value_id": "Unduh CV"
+ },
+ {
+  "copy_key": "available",
+  "value_en": "Open to MIS & Data Analyst opportunities",
+  "value_id": "Terbuka untuk kesempatan MIS & Data Analyst"
+ },
+ {
+  "copy_key": "scroll",
+  "value_en": "Scroll to explore",
+  "value_id": "Gulir untuk menjelajah"
+ },
+ {
+  "copy_key": "statementLabel",
+  "value_en": "The perspective",
+  "value_id": "Perspektif"
+ },
+ {
+  "copy_key": "statementTitle",
+  "value_en": "I build reports people can trust.",
+  "value_id": "Saya membangun laporan yang bisa dipercaya."
+ },
+ {
+  "copy_key": "statementBody",
+  "value_en": "I have spent more than eight years in banking, mostly where operations meet data. Producing reports is only half the job; the other half is making sure the numbers hold up when someone actually uses them.",
+  "value_id": "Lebih dari delapan tahun di perbankan, sebagian besar waktu saya di persimpangan antara operasional dan data. Menghasilkan laporan hanya separuh pekerjaan; separuh lainnya memastikan angkanya tetap berdiri saat benar-benar dipakai."
+ },
+ {
+  "copy_key": "impactLabel",
+  "value_en": "Career impact",
+  "value_id": "Dampak karier"
+ },
+ {
+  "copy_key": "impactTitle",
+  "value_en": "Small fixes.\nBig time savings.",
+  "value_id": "Perbaikan kecil.\nWaktu yang terasa."
+ },
+ {
+  "copy_key": "impactBody",
+  "value_en": "Changes that gave my team hours back every single week.",
+  "value_id": "Perubahan yang mengembalikan waktu tim saya setiap minggunya."
+ },
+ {
+  "copy_key": "experienceLabel",
+  "value_en": "Experience",
+  "value_id": "Pengalaman"
+ },
+ {
+  "copy_key": "experienceTitle",
+  "value_en": "Where I've\nbeen working.",
+  "value_id": "Tempat saya\nbekerja selama ini."
+ },
+ {
+  "copy_key": "experienceBody",
+  "value_en": "From branch reports to regulatory reporting. Different desks, same lesson: the details matter.",
+  "value_id": "Dari laporan cabang sampai regulatory reporting. Meja kerjanya berbeda, pelajarannya sama: detail itu penting."
+ },
+ {
+  "copy_key": "skillsLabel",
+  "value_en": "Toolkit",
+  "value_id": "Toolkit"
+ },
+ {
+  "copy_key": "skillsTitle",
+  "value_en": "What I use\nevery day.",
+  "value_id": "Yang saya pakai\nsehari-hari."
+ },
+ {
+  "copy_key": "workLabel",
+  "value_en": "Selected work",
+  "value_id": "Karya pilihan"
+ },
+ {
+  "copy_key": "workTitle",
+  "value_en": "Things I've\nactually built.",
+  "value_id": "Hal-hal yang\nbenar-benar saya bangun."
+ },
+ {
+  "copy_key": "workBody",
+  "value_en": "A mix of banking workflows and personal projects. Anything with fictional data says so up front.",
+  "value_id": "Campuran workflow perbankan dan proyek pribadi. Yang datanya fiktif, ditulis begitu di awal."
+ },
+ {
+  "copy_key": "aboutProject",
+  "value_en": "View case study",
+  "value_id": "Lihat studi kasus"
+ },
+ {
+  "copy_key": "educationLabel",
+  "value_en": "Foundation",
+  "value_id": "Fondasi"
+ },
+ {
+  "copy_key": "educationTitle",
+  "value_en": "Where it\nall started.",
+  "value_id": "Dari mana\nsemuanya mulai."
+ },
+ {
+  "copy_key": "certLabel",
+  "value_en": "Learning",
+  "value_id": "Pembelajaran"
+ },
+ {
+  "copy_key": "certTitle",
+  "value_en": "Still collecting\ncertificates.",
+  "value_id": "Terus mengumpulkan\nsertifikat."
+ },
+ {
+  "copy_key": "testimonialLabel",
+  "value_en": "A good working relationship",
+  "value_id": "Kolaborasi yang baik"
+ },
+ {
+  "copy_key": "contactLabel",
+  "value_en": "Let's connect",
+  "value_id": "Mari terhubung"
+ },
+ {
+  "copy_key": "contactTitle",
+  "value_en": "Have a complex\nprocess in mind?",
+  "value_id": "Punya proses\nyang kompleks?"
+ },
+ {
+  "copy_key": "contactBody",
+  "value_en": "If you need an MIS Analyst, or just want reporting that runs better, send me a message.",
+  "value_id": "Kalau Anda butuh MIS Analyst, atau hanya ingin reporting yang berjalan lebih baik, kirim saya pesan."
+ },
+ {
+  "copy_key": "email",
+  "value_en": "Send an email",
+  "value_id": "Kirim email"
+ },
+ {
+  "copy_key": "linkedin",
+  "value_en": "LinkedIn profile",
+  "value_id": "Profil LinkedIn"
+ },
+ {
+  "copy_key": "admin",
+  "value_en": "Admin",
+  "value_id": "Admin"
+ },
+ {
+  "copy_key": "viewAll",
+  "value_en": "View all projects",
+  "value_id": "Lihat semua proyek"
+ },
+ {
+  "copy_key": "projectCta",
+  "value_en": "Let’s discuss this work",
+  "value_id": "Mari diskusikan"
+ },
+ {
+  "copy_key": "backToList",
+  "value_en": "Back to all work",
+  "value_id": "Kembali ke daftar"
+ },
+ {
+  "copy_key": "copyright",
+  "value_en": "© 2026 Thomas Oddy Chrisdwianto",
+  "value_id": "© 2026 Thomas Oddy Chrisdwianto"
+ }
+]
