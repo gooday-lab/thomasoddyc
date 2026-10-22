@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import WorkView from "@/components/work-view";
+import { defaultProjects, fetchProjects, mergeProjects } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Projects | Thomas Oddy Chrisdwianto",
   description: "Selected reporting and performance-analysis projects by Thomas Oddy Chrisdwianto.",
 };
 
-export default function ProjectsPage() {
-  return <WorkView variant="projects" />;
+export default async function ProjectsPage() {
+  const rows = await fetchProjects();
+  return <WorkView variant="projects" initialProjects={mergeProjects(defaultProjects, rows)} />;
 }

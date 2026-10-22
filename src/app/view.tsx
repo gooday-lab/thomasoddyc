@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState, type CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
 import { ArrowUpRight, BarChart3, Download, Quote } from "lucide-react";
 import { useSite } from "@/components/site-context";
 import { MultiLine, SectionLabel, SiteShell } from "@/components/site-chrome";
-import { defaultTestimonials, fetchTestimonials, type TestimonialRecord } from "@/lib/content";
+import type { TestimonialRecord } from "@/lib/content";
 import { impact } from "@/lib/cv";
 
 function initials(name: string | null | undefined) {
@@ -17,19 +17,9 @@ function initials(name: string | null | undefined) {
     .join("");
 }
 
-export default function HomeView() {
+export default function HomeView({ initialTestimonials }: { initialTestimonials: TestimonialRecord[] }) {
   const { t, isId, pick, profile, heroDesign } = useSite();
-  const [testimonials, setTestimonials] = useState<TestimonialRecord[]>(defaultTestimonials);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetchTestimonials().then((rows) => {
-      if (!cancelled && rows.length) setTestimonials(rows);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const [testimonials] = useState<TestimonialRecord[]>(initialTestimonials);
 
   return (
     <SiteShell>
@@ -91,7 +81,7 @@ export default function HomeView() {
       </section>
 
       <section className="testimonial section-pad">
-        {testimonials.map((item) => (
+        {testimonials.length > 0 && testimonials.map((item) => (
           <div className="testimonial-content" key={item.id}>
             <Quote size={38} />
             <blockquote>“{pick(item.quote_en, item.quote_id)}”</blockquote>

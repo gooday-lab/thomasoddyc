@@ -1,48 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { useSite } from "./site-context";
 import { MultiLine, SiteShell } from "./site-chrome";
-import { defaultProjects, fetchProjects, mergeProjects, type ProjectRecord } from "@/lib/content";
+import type { ProjectRecord } from "@/lib/content";
+
 const listPath = (project: ProjectRecord) =>
   /case\s*stud/i.test(project.type ?? "") ? "/case-studies" : "/projects";
 
-export default function ProjectDetailView({ slug }: { slug: string }) {
+export default function ProjectDetailView({ initialProject }: { initialProject: ProjectRecord | null }) {
   const { t, pick } = useSite();
-  // Defaults render instantly; Supabase content replaces them once loaded.
-  const [project, setProject] = useState<ProjectRecord | null>(
-    () => defaultProjects.find((item) => item.slug === slug) ?? null,
-  );
-  const [loading, setLoading] = useState(
-    () => !defaultProjects.some((item) => item.slug === slug),
-  );
-
-  useEffect(() => {
-    let cancelled = false;
-    const load = async () => {
-      const rows = await fetchProjects();
-      if (cancelled) return;
-      const pool = rows.length ? mergeProjects(defaultProjects, rows) : defaultProjects;
-      setProject(pool.find((item) => item.slug === slug) ?? null);
-      setLoading(false);
-    };
-    void load();
-    return () => {
-      cancelled = true;
-    };
-  }, [slug]);
-
-  if (loading) {
-    return (
-      <SiteShell>
-        <section className="work section-pad">
-          <p className="work-empty">Loading…</p>
-        </section>
-      </SiteShell>
-    );
-  }
+  const project = initialProject;
 
   if (!project) {
     return (

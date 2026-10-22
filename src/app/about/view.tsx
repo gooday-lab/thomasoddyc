@@ -1,24 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSite } from "@/components/site-context";
 import { MultiLine, SectionLabel, SiteShell } from "@/components/site-chrome";
-import { defaultCertifications, fetchCertifications, type CertificationRecord } from "@/lib/content";
+import type { CertificationRecord } from "@/lib/content";
 import { skills } from "@/lib/cv";
 
-export default function AboutView() {
+export default function AboutView({ initialCertifications }: { initialCertifications: CertificationRecord[] }) {
   const { t, pick } = useSite();
-  const [certifications, setCertifications] = useState<CertificationRecord[]>(defaultCertifications);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetchCertifications().then((rows) => {
-      if (!cancelled && rows.length) setCertifications(rows);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const [certifications] = useState<CertificationRecord[]>(initialCertifications);
 
   return (
     <SiteShell>
@@ -50,7 +40,7 @@ export default function AboutView() {
         <div className="two-column foundation-grid">
           <div><SectionLabel>{t.certLabel}</SectionLabel><h2><MultiLine text={t.certTitle} /></h2></div>
           <div className="foundation-right">
-            {certifications.map((cert) => (
+            {certifications.length > 0 && certifications.map((cert) => (
               <div className="cert-row" key={cert.id}>
                 <div><h3>{pick(cert.name_en, cert.name_id)}</h3><p>{cert.issuer ?? ""}</p></div>
                 <span>{cert.year ?? ""}</span>

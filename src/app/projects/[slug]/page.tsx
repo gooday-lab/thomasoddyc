@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ProjectDetailView from "@/components/project-detail-view";
+import { defaultProjects, fetchProjects, mergeProjects } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Project | Thomas Oddy Chrisdwianto",
@@ -8,5 +9,7 @@ export const metadata: Metadata = {
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  return <ProjectDetailView slug={slug} />;
+  const rows = await fetchProjects();
+  const pool = rows.length ? mergeProjects(defaultProjects, rows) : defaultProjects;
+  return <ProjectDetailView initialProject={pool.find((item) => item.slug === slug) ?? null} />;
 }

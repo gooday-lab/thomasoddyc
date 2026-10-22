@@ -1,27 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { ArrowUpRight, MoveUpRight } from "lucide-react";
 import { useSite } from "./site-context";
 import { MultiLine, SectionLabel, SiteShell } from "./site-chrome";
-import { defaultProjects, fetchProjects, mergeProjects, type ProjectRecord } from "@/lib/content";
+import type { ProjectRecord } from "@/lib/content";
 
 const isCaseStudy = (project: ProjectRecord) => /case\s*stud/i.test(project.type ?? "");
 
-export default function WorkView({ variant }: { variant: "case-studies" | "projects" }) {
+export default function WorkView({ variant, initialProjects }: { variant: "case-studies" | "projects"; initialProjects: ProjectRecord[] }) {
   const { t, pick } = useSite();
-  const [projects, setProjects] = useState<ProjectRecord[]>(defaultProjects);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetchProjects().then((rows) => {
-      if (!cancelled) setProjects(mergeProjects(defaultProjects, rows));
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const projects = initialProjects;
 
   const visible = projects.filter((project) =>
     variant === "case-studies" ? isCaseStudy(project) : !isCaseStudy(project),

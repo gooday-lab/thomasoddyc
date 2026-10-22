@@ -1,13 +1,8 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 import { copy, type CopyKey, type Language } from "@/lib/copy";
-import {
-  defaultProfile,
-  fetchProfile,
-  fetchSiteCopy,
-  type ProfileRecord,
-} from "@/lib/content";
+import type { ProfileRecord } from "@/lib/content";
 
 type CopyOverrides = Record<string, { en: string | null; id: string | null }>;
 
@@ -24,6 +19,19 @@ export const defaultHeroDesign: HeroDesign = {
   align: "left",
   orientation: "horizontal",
 };
+
+/** Resolve the hero design from site_copy overrides (pure, no fetching). */
+function resolveHeroDesign(overrides: CopyOverrides): HeroDesign {
+  const value = (key: string) => overrides[key]?.en ?? null;
+  return {
+    font: value("heroFont") || defaultHeroDesign.font,
+    size: value("heroSize") || defaultHeroDesign.size,
+    align: (["left", "center", "right"] as const).includes(value("heroAlign") as "left" | "center" | "right")
+      ? value("heroAlign") as HeroDesign["align"]
+      : defaultHeroDesign.align,
+    orientation: value("heroOrientation") === "vertical" ? "vertical" : "horizontal",
+  };
+}
 
 type SiteContextValue = {
   language: Language;
@@ -42,40 +50,21 @@ const SiteContext = createContext<SiteContextValue | null>(null);
 /** Real newlines and literal "\n" both become line breaks in rendered text. */
 const withBreaks = (text: string) => text.replace(/\\n/g, "\n");
 
-export function SiteProvider({ children }: { children: React.ReactNode }) {
+export function SiteProvider({
+  children,
+  initialProfile,
+  initialOverrides,
+}: {
+  children: React.ReactNode;
+  /** Fetched on the server (root layout), so the first paint is already final. */
+  initialProfile: ProfileRecord;
+  initialOverrides: CopyOverrides;
+}) {
   const [language, setLanguage] = useState<Language>("en");
-  const [profile, setProfile] = useState<ProfileRecord>(defaultProfile);
-  const [overrides, setOverrides] = useState<CopyOverrides>({});
-  const [heroDesign, setHeroDesign] = useState<HeroDesign>(defaultHeroDesign);
+  const [profile] = useState<ProfileRecord>(initialProfile);
+  const [overrides] = useState<CopyOverrides>(initialOverrides);
 
-  useEffect(() => {
-    let cancelled = false;
-    const load = async () => {
-      const [profileData, copyRows] = await Promise.all([fetchProfile(), fetchSiteCopy()]);
-      if (cancelled) return;
-      if (profileData) setProfile(profileData);
-      if (copyRows.length) {
-        const next: CopyOverrides = {};
-        for (const row of copyRows) {
-          next[row.copy_key] = { en: row.value_en, id: row.value_id };
-        }
-        setOverrides(next);
-        const value = (key: string) => copyRows.find((row) => row.copy_key === key)?.value_en;
-        setHeroDesign({
-          font: value("heroFont") || defaultHeroDesign.font,
-          size: value("heroSize") || defaultHeroDesign.size,
-          align: (["left", "center", "right"] as const).includes(value("heroAlign") as "left" | "center" | "right")
-            ? value("heroAlign") as HeroDesign["align"]
-            : defaultHeroDesign.align,
-          orientation: value("heroOrientation") === "vertical" ? "vertical" : "horizontal",
-        });
-      }
-    };
-    void load();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const heroDesign = useMemo(() => resolveHeroDesign(overrides), [overrides]);
 
   const value = useMemo<SiteContextValue>(() => {
     const isId = language === "id";

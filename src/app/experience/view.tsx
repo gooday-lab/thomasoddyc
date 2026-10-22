@@ -1,24 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Check } from "lucide-react";
 import { useSite } from "@/components/site-context";
 import { MultiLine, SectionLabel, SiteShell } from "@/components/site-chrome";
-import { defaultExperience, fetchExperience, type ExperienceRecord } from "@/lib/content";
+import type { ExperienceRecord } from "@/lib/content";
+import { defaultExperience } from "@/lib/content";
 
-export default function ExperienceView() {
+export default function ExperienceView({ initialExperience }: { initialExperience: ExperienceRecord[] }) {
   const { t, pick } = useSite();
-  const [items, setItems] = useState<ExperienceRecord[]>(defaultExperience);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetchExperience().then((rows) => {
-      if (!cancelled && rows.length) setItems(rows);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const [items] = useState<ExperienceRecord[]>(initialExperience.length ? initialExperience : defaultExperience);
 
   return (
     <SiteShell>
